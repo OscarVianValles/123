@@ -1,12 +1,32 @@
 #include <algorithm>
 #include <fstream>
 #include <iostream>
+#include <list>
 #include <sstream>
 #include <string>
 
-// Creating Loop class
+// Creating Conditions Enums and Representation Function;
+enum Conditions { less = 1 << 0, greater = 1 << 1, equal = 1 << 2 };
+std::string getConditionRepresentation(int conditionType) {
+  std::string condition;
+  if (conditionType & Conditions::less) {
+    condition.append(1, '<');
+  }
 
+  if (conditionType & Conditions::greater) {
+    condition.append(1, '>');
+  }
+
+  if (conditionType & Conditions::equal) {
+    condition.append(1, '=');
+  }
+
+  return condition;
+}
+
+// Creating Loop Class
 class Loop {
+
 public:
   std::string getIterator();
   std::string getCondition();
@@ -14,15 +34,22 @@ public:
   std::string getProcedures();
 
   void tokenize(std::string &file);
-  void tokenizeParenContent(std::string &parenContent);
-  void tokenizeBracketContent(std::string &bracketContent);
   void printMembers();
 
 private:
-  std::string iterator;
-  std::string condition;
-  std::string loopOperator; // Operator is a reserved word
-  std::string procedures;
+  std::string _iterator;
+  int _counter;
+  int _conditionType;
+  int _conditionNumber;
+  int _operatorType;
+  int _operatorNumber;
+  std::list<std::string> _procedures;
+
+  void _tokenizeParenContent(std::string &parenContent);
+  void _tokenizeIterator(std::string rawIterator);
+  void _tokenizeCondition(std::string rawCondition);
+  void _tokenizeOperator(std::string rawOperator);
+  void _tokenizeBracketContent(std::string &bracketContent);
 };
 
 void Loop::tokenize(std::string &file) {
@@ -45,10 +72,11 @@ void Loop::tokenize(std::string &file) {
   std::string parenContent = file.substr(openParen, parenLen);
   std::string bracketContent = file.substr(openBracket, bracketLen);
 
-  tokenizeParenContent(parenContent);
+  _tokenizeParenContent(parenContent);
+  _tokenizeBracketContent(bracketContent);
 }
 
-void Loop::tokenizeParenContent(std::string &parenContent) {
+void Loop::_tokenizeParenContent(std::string &parenContent) {
 
   // Creating buffer variables
   std::istringstream tempStream(parenContent);
@@ -59,13 +87,13 @@ void Loop::tokenizeParenContent(std::string &parenContent) {
   while (std::getline(tempStream, token, ';')) {
     switch (counter) {
     case 0:
-      iterator = token;
+      _tokenizeIterator(token.substr(3, token.length() - 3));
       break;
     case 1:
-      condition = token;
+      _tokenizeCondition(token);
       break;
     case 2:
-      loopOperator = token;
+      _operator = token;
       break;
     default:
       break;
@@ -75,18 +103,105 @@ void Loop::tokenizeParenContent(std::string &parenContent) {
   }
 }
 
-void Loop::tokenizeBracketContent(std::string &bracketContent) {
+void Loop::_tokenizeIterator(std::string rawIterator) {
 
+  // Creating buffer variables
+  std::istringstream tempStream(rawIterator);
+  std::string token;
+  int counter = 0;
+
+  while (std::getline(tempStream, token, '=')) {
+    switch (counter) {
+    case 0:
+      _iterator = token;
+      break;
+    case 1:
+      _counter = stoi(token);
+      break;
+    default:
+      break;
+    }
+
+    counter++;
+  }
+}
+
+void Loop::_tokenizeCondition(std::string rawCondition) {
+  rawCondition = rawCondition.substr(
+      _iterator.length(), rawCondition.length() - _iterator.length());
+
+  int conditionLength = 1;
+  switch (rawCondition[0]) {
+
+  case '<': {
+    if (rawCondition[1] == '=') {
+      _conditionType = Conditions::less | Conditions::equal;
+      conditionLength++;
+    } else {
+      _conditionType = Conditions::less;
+    }
+    break;
+  }
+
+  case '>': {
+    if (rawCondition[1] == '=') {
+      _conditionType = Conditions::greater | Conditions::equal;
+      conditionLength++;
+    } else {
+      _conditionType = Conditions::greater;
+    }
+    break;
+  }
+
+  case '=': {
+    if (rawCondition[1] == '=') {
+      _conditionType = Conditions::equal;
+      conditionLength++;
+    }
+    break;
+  }
+
+  default:
+    break;
+  }
+
+  rawCondition = rawCondition.substr(conditionLength,
+                                     rawCondition.length() - conditionLength);
+
+  _conditionNumber = stoi(rawCondition);
+}
+
+void Loop::_tokenizeOperator(std::string rawOperator) {
+  rawOperator = rawOperator.substr(_iterator.length(),
+                                   rawOperator.length() - _iterator.length());
+}
+
+void Loop::_tokenizeBracketContent(std::string &bracketContent) {
   // Creating buffer variables
   std::istringstream tempStream(bracketContent);
   std::string token;
+
+  while (std::getline(tempStream, token, ';')) {
+    _procedures.push_back(token);
+  }
 }
 
 void Loop::printMembers() {
-  std::cout << "Iterator: " << iterator << std::endl
-            << "Condition: " << condition << std::endl
-            << "Operator: " << (loopOperator.empty() ? "Empty" : loopOperator)
-            << std::endl;
+  std::cout << "Iterator: " << _iterator << std::endl
+            << "Intial Counter: " << _counter << std::endl
+            << "Condition Type: " << getConditionRepresentation(_conditionType)
+            << std::endl
+            << "Condition Number: " << _conditionNumber << std::endl
+            << "Operator Number: "
+            << (_operatorNumber == 0 ? "Empty"
+                                     : std::to_string(_operatorNumber))
+            << std::endl
+            << std::endl
+            << "Procedures: " << std::endl;
+
+  for (auto &i : _procedures) {
+    std::cout << i << std::endl;
+  }
 }
 
 std::string readFile(std::ifstream &input);
