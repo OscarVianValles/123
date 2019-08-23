@@ -5,6 +5,9 @@
 #include <sstream>
 #include <string>
 
+void readFile(std::ifstream &input, std::list<std::string> &loopHolder);
+void tokenizeLoops(std::list<std::string> &loopHolder);
+bool isNumber(std::string &in);
 // Creating Conditions Enums and Representation Function;
 enum Conditions { less = 1 << 0, greater = 1 << 1, equal = 1 << 2 };
 std::string getConditionRepresentation(int conditionType) {
@@ -24,6 +27,26 @@ std::string getConditionRepresentation(int conditionType) {
   return condition;
 }
 
+// Creating Operators Enums and Representation Function;
+enum Operators { plus, minus, multiply, divide, modulo };
+std::string getOperatorRepresentation(int operatorType) {
+  std::string representation;
+  switch (operatorType) {
+  case Operators::plus:
+    return representation.append(1, '+');
+  case Operators::minus:
+    return representation.append(1, '-');
+  case Operators::multiply:
+    return representation.append(1, '*');
+  case Operators::divide:
+    return representation.append(1, '/');
+  case Operators::modulo:
+    return representation.append(1, '%');
+  default:
+    return representation;
+  }
+}
+
 // Creating Loop Class
 class Loop {
 
@@ -33,14 +56,19 @@ public:
   std::string getOperator();
   std::string getProcedures();
 
-  void tokenize(std::string &file);
+  void tokenize(std::string file);
   void printMembers();
 
 private:
   std::string _iterator;
-  int _counter;
+  std::string _counter;
+  int _counterNumber;
+  std::string _counterVar;
+  std::string _condition;
   int _conditionType;
   int _conditionNumber;
+  std::string _conditionVar;
+  std::string _operator;
   int _operatorType;
   int _operatorNumber;
   std::list<std::string> _procedures;
@@ -52,7 +80,7 @@ private:
   void _tokenizeBracketContent(std::string &bracketContent);
 };
 
-void Loop::tokenize(std::string &file) {
+void Loop::tokenize(std::string file) {
   // Gets the next character after the parenthesis
   unsigned openParen = file.find("(") + 1;
 
@@ -90,7 +118,8 @@ void Loop::_tokenizeParenContent(std::string &parenContent) {
       _tokenizeIterator(token.substr(3, token.length() - 3));
       break;
     case 1:
-      _tokenizeCondition(token);
+      _condition = token;
+      // _tokenizeCondition(token);
       break;
     case 2:
       _operator = token;
@@ -116,7 +145,12 @@ void Loop::_tokenizeIterator(std::string rawIterator) {
       _iterator = token;
       break;
     case 1:
-      _counter = stoi(token);
+      _counter = token;
+      if (isNumber(token)) {
+        _counterNumber = stoi(token);
+      } else {
+        _counterVar = token;
+      }
       break;
     default:
       break;
@@ -168,12 +202,11 @@ void Loop::_tokenizeCondition(std::string rawCondition) {
   rawCondition = rawCondition.substr(conditionLength,
                                      rawCondition.length() - conditionLength);
 
-  _conditionNumber = stoi(rawCondition);
-}
-
-void Loop::_tokenizeOperator(std::string rawOperator) {
-  rawOperator = rawOperator.substr(_iterator.length(),
-                                   rawOperator.length() - _iterator.length());
+  if (isNumber(rawCondition)) {
+    _conditionNumber = stoi(rawCondition);
+  } else {
+    _conditionVar = rawCondition;
+  }
 }
 
 void Loop::_tokenizeBracketContent(std::string &bracketContent) {
@@ -182,53 +215,70 @@ void Loop::_tokenizeBracketContent(std::string &bracketContent) {
   std::string token;
 
   while (std::getline(tempStream, token, ';')) {
-    _procedures.push_back(token);
+    int operatorLocation = token.find(_iterator);
+    if (operatorLocation != std::string::npos && _operator.empty()) {
+      operatorLocation += _iterator.length();
+
+      // Logical XOR Operator. This is done to get += =iter+1 and other
+      // operators that can operate on the iterator but not ==
+      if ((!(token[operatorLocation] == '=') !=
+           !(token[operatorLocation + 1] == '=')) ||
+          ((token[operatorLocation] == '+' &&
+            token[operatorLocation + 1] == '+')) ||
+          ((token[operatorLocation] == '-' &&
+            token[operatorLocation - 1] == '-'))) {
+        _operator = token;
+      }
+    } else {
+      _procedures.push_back(token);
+    }
   }
 }
 
 void Loop::printMembers() {
-  std::cout << "Iterator: " << _iterator << std::endl
-            << "Intial Counter: " << _counter << std::endl
-            << "Condition Type: " << getConditionRepresentation(_conditionType)
-            << std::endl
-            << "Condition Number: " << _conditionNumber << std::endl
-            << "Operator Number: "
-            << (_operatorNumber == 0 ? "Empty"
-                                     : std::to_string(_operatorNumber))
-            << std::endl
-            << std::endl
-            << "Procedures: " << std::endl;
+  std::cout
+      << "==========[ Loop ]==========" << std::endl
+      << "Iterator: " << _iterator << std::endl
+      << "Intial Counter Number: " << _counterNumber << std::endl
+      << "Intial Counter Var: " << _counterVar << std::endl
+      << "Condition: " << _condition
+      << std::endl
+      // << "Condition Type: " << getConditionRepresentation(_conditionType)
+      // << std::endl
+      // << "Condition Number: " << _conditionNumber << std::endl
+      // << "Condition Var: " << _conditionVar << std::endl
+      << "Operator: " << (_operator.empty() ? "Empty" : _operator) << std::endl
+      << std::endl
+      << "Procedures: " << std::endl;
 
   for (auto &i : _procedures) {
     std::cout << i << std::endl;
   }
+
+  std::cout << std::endl;
 }
 
-std::string readFile(std::ifstream &input);
 int main() {
 
   // Opening File
-  std::string fileName = "inputFile.txt";
+  std::string fileName;
+  std::cout << "Enter the name of the input file" << std::endl;
+  std::cin >> fileName;
   std::ifstream input(fileName);
 
   // Creating string from file;
-  std::string file;
-  file = readFile(input);
-
-  Loop *first = new Loop();
-
-  first->tokenize(file);
-  first->printMembers();
-
+  std::list<std::string> loopHolder;
+  readFile(input, loopHolder);
+  tokenizeLoops(loopHolder);
   return 0;
 }
 
 // Reads the file and appends it to a string. Making it one line for easier
 // tokenizing
-std::string readFile(std::ifstream &input) {
-
-  // Creating the string to receive the contents of the file
+void readFile(std::ifstream &input, std::list<std::string> &loopHolder) {
   std::string fileContent;
+  int forCounter = 0;
+  int foundFor = false;
   if (input.is_open()) {
 
     // Creating the buffer string
@@ -236,15 +286,43 @@ std::string readFile(std::ifstream &input) {
 
     // Reading each line
     while (getline(input, lines)) {
-
-      // Appending each line to the string to be returned
-      fileContent.append(lines);
+      if (lines.find("for") != std::string::npos) {
+        foundFor = true;
+        forCounter++;
+      }
+      if (foundFor) {
+        if (forCounter > 0) {
+          lines.erase(std::remove(lines.begin(), lines.end(), '\r'),
+                      lines.end());
+          fileContent.append(lines);
+        }
+        if (lines.find("}") != std::string::npos) {
+          forCounter--;
+        }
+        if (forCounter == 0) {
+          foundFor = false;
+          fileContent.erase(
+              std::remove(fileContent.begin(), fileContent.end(), ' '),
+              fileContent.end());
+          loopHolder.push_back(fileContent);
+          fileContent.clear();
+        }
+      }
     }
   }
+}
 
-  // Removing Spaces
-  fileContent.erase(std::remove(fileContent.begin(), fileContent.end(), ' '),
-                    fileContent.end());
+void tokenizeLoops(std::list<std::string> &loopHolder) {
+  for (auto &i : loopHolder) {
+    Loop *holder = new Loop();
+    holder->tokenize(i);
+    holder->printMembers();
+    delete (holder);
+  }
+}
 
-  return fileContent;
+// Checking if entire string is a number. From
+// https://stackoverflow.com/questions/4654636/how-to-determine-if-a-string-is-a-number-with-c
+bool isNumber(std::string &s) {
+  return !s.empty() && std::all_of(s.begin(), s.end(), ::isdigit);
 }
