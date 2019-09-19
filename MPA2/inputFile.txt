@@ -9,4 +9,8 @@ for (int
 
 
   x = y + z;
+
+  for (int x = 0; i < 10; i++){
+    a+b+c;
+  }
 }

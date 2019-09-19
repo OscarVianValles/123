@@ -1,9 +1,11 @@
-#include <algorithm>
 #include <fstream>
 #include <iostream>
 #include <list>
 #include <sstream>
 #include <string>
+
+#include "loop.hpp"
+#include "poly.hpp"
 
 void readFile(std::ifstream &input, std::list<std::string> &loopHolder);
 void tokenizeLoops(std::list<std::string> &loopHolder);
@@ -15,10 +17,11 @@ int main() {
   std::cin >> fileName;
   std::ifstream input(fileName);
 
-  // Creating string from file;
+  // Creating strings from file;
   std::list<std::string> loopHolder;
   readFile(input, loopHolder);
   tokenizeLoops(loopHolder);
+
   return 0;
 }
 
@@ -63,9 +66,10 @@ void readFile(std::ifstream &input, std::list<std::string> &loopHolder) {
 
 void tokenizeLoops(std::list<std::string> &loopHolder) {
   for (auto &i : loopHolder) {
-    Loop *holder = new Loop();
-    holder->tokenize(i);
-    holder->printMembers();
-    delete (holder);
+    Loop holder;
+    holder.tokenize(i);
+    holder.printMembers();
+    holder.count();
+    holder.printCount();
   }
 }
