@@ -40,7 +40,7 @@ void Loop::_tokenizeParenContent(std::string &parenContent) {
       _counter.tokenize(_iterator.tokenize(token));
       break;
     case 1:
-      _condition.tokenize(token, _iterator.getIterator().length());
+      _condition.tokenize(token, _iterator.getIterator());
       break;
     case 2:
       _operator.tokenize(token);

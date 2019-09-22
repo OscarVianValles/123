@@ -1,6 +1,7 @@
 #ifndef MPA2_CONDITION
 #define MPA2_CONDITION
 
+#include <algorithm>
 #include <string>
 
 class Condition {
@@ -14,12 +15,20 @@ private:
 
   bool _isRoot;    // a bool to check if the operator is logarithmic
   int _rootNumber; // Stores the root number, ie 2 if sqr root;
+
+  bool _checkIfStringIsNumber(std::string &s);
+
 public:
-  int getCount();
-  bool getIsNumber();
-  bool getIsRoot();
-  int getRootNumber();
-  void tokenize(std::string rawCondition, int iteratorLength);
+  Condition();
+  int getCount() const;
+  bool getIsNumber() const;
+  bool getIsRoot() const;
+  int getRootNumber() const;
+  int getConditionType() const;
+  int getConditionNumber() const;
+  std::string getConditionVar() const;
+
+  void tokenize(std::string rawCondition);
 };
 
 #endif
