@@ -6,6 +6,10 @@
 #include <sstream>
 #include <string>
 
+#include "condition.hpp"
+#include "counter.hpp"
+#include "iterator.hpp"
+#include "operator.hpp"
 #include "poly.hpp"
 #include "utils.hpp"
 
@@ -13,44 +17,30 @@
 class Loop {
 
 public:
-  std::string getIterator();
-  std::string getCondition();
-  std::string getOperator();
-  std::string getProcedures();
-
+  Loop();
   void tokenize(std::string file);
   void count();
   void printMembers();
   void printCount();
 
 private:
-  std::string _iterator;
+  // Contents of the loop
+  Iterator _iterator;                 // Object that stores the iterator
+  Condition _condition;               // Object that stores the condition
+  Counter _counter;                   // Object that stores the counter
+  Operator _operator;                 // Object that stores the operator
+  std::list<std::string> _procedures; // The list of all procedures in the loop
 
-  std::string _counter;
-  int _counterNumber;
-  std::string _counterVar;
+  Poly _polyCount; // The polynomial that stores the count
 
-  std::string _condition;
-  int _conditionType;
-  int _conditionNumber;
-  int _conditionSqrtCount;
-  std::string _conditionVar;
-
-  std::string _operator;
-  int _operatorType;
-  int _operatorNumber;
-
-  std::list<std::string> _procedures;
-
-  Poly polyCount;
-
+  // Tokenize the loop
   void _tokenizeParenContent(std::string &parenContent);
-  void _tokenizeIterator(std::string rawIterator);
-  void _tokenizeCondition(std::string rawCondition);
-  void _tokenizeOperator(std::string rawOperator);
   void _tokenizeBracketContent(std::string &bracketContent);
 
+  // Counts the loop
   int _countProcedures();
+  int _countParametersInLoop();
+  int _countParametersAfterLoop();
   int _countUpperLimit();
 };
 

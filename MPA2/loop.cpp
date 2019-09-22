@@ -35,118 +35,21 @@ void Loop::_tokenizeParenContent(std::string &parenContent) {
   while (std::getline(tempStream, token, ';')) {
     switch (counter) {
     case 0:
-      _tokenizeIterator(token.substr(3, token.length() - 3));
+      // Tokenizes the iterator which returns the counter, which is then
+      // tokenized;
+      _counter.tokenize(_iterator.tokenize(token));
       break;
     case 1:
-      _tokenizeCondition(token);
+      _condition.tokenize(token, _iterator.getIterator().length());
       break;
     case 2:
-      _operator = token;
+      _operator.tokenize(token);
       break;
     default:
       break;
     }
 
     counter++;
-  }
-}
-
-void Loop::_tokenizeIterator(std::string rawIterator) {
-
-  // Creating buffer variables
-  std::istringstream tempStream(rawIterator);
-  std::string token;
-  int counter = 0;
-
-  while (std::getline(tempStream, token, '=')) {
-    switch (counter) {
-    case 0:
-      _iterator = token;
-      break;
-    case 1:
-      _counter = token;
-      if (isNumber(token)) {
-        _counterNumber = stoi(token);
-      } else {
-        _counterVar = token;
-      }
-      break;
-    default:
-      break;
-    }
-
-    counter++;
-  }
-}
-
-void Loop::_tokenizeCondition(std::string rawCondition) {
-  rawCondition = rawCondition.substr(
-      _iterator.length(), rawCondition.length() - _iterator.length());
-
-  unsigned int conditionLength = 1, i = 0, sqrtCount = 0;
-  switch (rawCondition[0]) {
-
-  case '<': {
-    if (rawCondition[1] == '=') {
-      _conditionType = Conditions::less | Conditions::equal;
-      conditionLength++;
-    } else {
-      _conditionType = Conditions::less;
-    }
-    break;
-  }
-
-  case '>': {
-    if (rawCondition[1] == '=') {
-      _conditionType = Conditions::greater | Conditions::equal;
-      conditionLength++;
-    } else {
-      _conditionType = Conditions::greater;
-    }
-    break;
-  }
-
-  case '=': {
-    if (rawCondition[1] == '=') {
-      _conditionType = Conditions::equal;
-      conditionLength++;
-    }
-    break;
-  }
-
-  case '*': {
-    while (rawCondition[i] != '<' || rawCondition[i] != '>' ||
-           rawCondition[i] != '=') {
-      if (rawCondition[i] == _iterator[i]) {
-        // Delete Iterator from condition
-        rawCondition = rawCondition.substr(
-            _iterator.length(), rawCondition.length() - _iterator.length());
-        // Correct I
-        i -= _iterator.length();
-      } else {
-        // Counts the number of multipliers in the condition
-        conditionLength++;
-        sqrtCount++;
-        i++;
-      }
-    }
-
-  default:
-    break;
-  }
-  }
-
-  // Handling numbers
-  rawCondition = rawCondition.substr(conditionLength,
-                                     rawCondition.length() - conditionLength);
-
-  if (sqrtCount > 0) {
-    _conditionSqrtCount = ++sqrtCount;
-  }
-  if (isNumber(rawCondition)) {
-    _conditionNumber = stoi(rawCondition);
-  } else {
-    _conditionVar = rawCondition;
   }
 }
 
@@ -201,13 +104,45 @@ void Loop::printMembers() {
 }
 
 void Loop::count() {
-  Term procedures(_countProcedures(), 0);
-  procedures.applySummation(true, _counterNumber, _conditionNumber, "");
-  polyCount += procedures;
+  Term inLoop(_countProcedures() + _countParametersInLoop(), 0);
+  inLoop.applySummation(true, _counterNumber, _conditionNumber, "");
+  polyCount += inLoop;
+  Term afterLoop(_countParametersAfterLoop(), 0);
+  polyCount += afterLoop;
+}
+
+int Loop::_countParametersInLoop() {
+  int count = 0;
+
+  // Get count from condition
+  if (_conditionType <= Conditions::equal) {
+    count++;
+  }
+
+  // Get count from operators
+  if (_operatorType <= Operators::modulo) {
+    count++;
+  }
+
+  return count;
+}
+
+int Loop::_countParametersAfterLoop() {
+  int count = 0;
+
+  // Get count from iterator
+  count++;
+
+  // Get count from condition
+  if (_conditionType <= Conditions::equal) {
+    count++;
+  }
+
+  return count;
 }
 
 int Loop::_countProcedures() {
-  int count;
+  int count = 0;
   for (auto &i : _procedures) {
     for (auto &j : i) {
       if (j == '+' || j == '-' || j == '*' || j == '/' || j == '=') {
