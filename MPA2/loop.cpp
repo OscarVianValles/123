@@ -80,7 +80,8 @@ void Loop::count() {
   // If counter is a number, condition is not and operator is multiply
   if ((_counter.getIsNumber() && !_condition.getIsNumber()) &&
       (_operator.getOperatorType() & Operator::Operators::multiply)) {
-    _polyCount.applySummation(false, true, _counter.getCounterNumber(), 0, "",
+    _polyCount.applySummation(true, true, _counter.getCounterNumber(), 0,
+                              _condition.getConditionVar(),
                               _operator.getOperatorNumber());
   }
 

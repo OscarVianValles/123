@@ -21,21 +21,21 @@ for (int i = 7; i <= n; i++) {
 }
 
 for (int i = 1; i <= n; i *= 2) {
-    b += a;
-    a--;
+    b + a;
+    a-;
     a = b + c + f;
 }
 
 for (int i = 1; i <= n; i *= 5) {
     a = 2 * b;
     a = a + c + f;
-    b *= 3 + c
-    b += a;
-    a--;
+    b * 3 + c
+    b + a;
+    a-;
 }
 
 for (int i = 3; i <= n; i *= 5) {
     a = 2 * b;
-    b *= 3 + c
-    a--;
+    b * 3 + c
+    a-;
 }

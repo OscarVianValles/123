@@ -15,7 +15,7 @@ public:
   bool append(Term &input);
   bool multiply(Term &input);
 
-  bool applySummation(bool isUpperLimitVariable, bool isLogarithmic,
+  bool applySummation(bool isUpperLimitNumber, bool isLogarithmic,
                       int lowerLimit, int upperLimitInt,
                       std::string upperLimitString, int logarithmicBase);
   void printTerms() const;

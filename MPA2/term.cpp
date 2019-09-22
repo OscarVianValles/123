@@ -44,14 +44,17 @@ bool Term::multiplyTerm(Term &input) {
   return true;
 }
 
-bool Term::applySummation(bool isUpperLimitVariable, bool isLogarithmic,
+bool Term::applySummation(bool isUpperLimitNumber, bool isLogarithmic,
                           int lowerLimit, int upperLimitInt,
                           std::string upperLimitString, int logarithmicBase) {
 
   if (isLogarithmic) {
     _type = Function::log;
     _functionNumber = logarithmicBase;
-  } else if (isUpperLimitVariable) {
+    _variable = upperLimitString;
+    _exponent = 1;
+
+  } else if (isUpperLimitNumber) {
     // Checking if lowerLimit is is less than the upperlimit
     if (lowerLimit > upperLimitInt) {
       _coefficient = 0;

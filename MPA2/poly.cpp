@@ -66,36 +66,33 @@ bool Poly::multiply(Term &input) {
 }
 
 // Apply summation to all members of the polynomial
-bool Poly::applySummation(bool isUpperLimitVariable, bool isLogarithmic,
+bool Poly::applySummation(bool isUpperLimitNumber, bool isLogarithmic,
                           int lowerLimit, int upperLimitInt,
                           std::string upperLimitString, int logarithmicBase) {
   for (auto it = terms.begin(); it != terms.end(); it++) {
-    if (isLogarithmic) {
-      it->applySummation(isUpperLimitVariable, isLogarithmic, lowerLimit,
-                         upperLimitInt, upperLimitString, logarithmicBase);
-    }
 
     // If upper limit is not a number and the lower limit is != 1, a formula is
     // applied to get the summation
-    else if (!isUpperLimitVariable && lowerLimit != 1) {
+    if ((!isUpperLimitNumber || isLogarithmic) && lowerLimit != 1) {
 
       // Create new term for the constant part of the formula
       Term newTerm(0 - it->getCoefficient(), it->getExponent());
 
       // apply summation to both
-      it->applySummation(isUpperLimitVariable, isLogarithmic, 1, upperLimitInt,
+      it->applySummation(isUpperLimitNumber, isLogarithmic, 1, upperLimitInt,
                          upperLimitString, logarithmicBase);
-      newTerm.applySummation(true, isLogarithmic, 1, lowerLimit - 1, "",
+      newTerm.applySummation(true, false, 1, lowerLimit - 1, "",
                              logarithmicBase);
 
       // Append new term
       this->append(newTerm);
+
       // skips the next term
       it++;
     } else {
 
       // If upper limit is a number, normal summation rules are applied
-      if (it->applySummation(isUpperLimitVariable, isLogarithmic, lowerLimit,
+      if (it->applySummation(isUpperLimitNumber, isLogarithmic, lowerLimit,
                              upperLimitInt, upperLimitString,
                              logarithmicBase) == false) {
         return false;
@@ -136,7 +133,7 @@ void Poly::printTerms() const {
 
     if (currType == Term::Function::log) {
       std::cout << std::abs(currCoefficient) << " log(" << currFunctionNumber
-                << ")" << currVariableString << std::endl;
+                << ") " << currVariableString;
     } else {
       std::cout << std::abs(currCoefficient) << currVariableString;
     }

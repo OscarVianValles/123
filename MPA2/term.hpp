@@ -22,7 +22,7 @@ public:
   bool addCoefficient(int x);
   bool multiplyTerm(Term &input);
 
-  bool applySummation(bool isUpperLimitVariable, bool isLogarithmic,
+  bool applySummation(bool isUpperLimitNumber, bool isLogarithmic,
                       int lowerLimit, int upperLimitInt,
                       std::string upperLimitString, int logarithmicBase);
 
