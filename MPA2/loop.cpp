@@ -116,6 +116,6 @@ int Loop::_countProcedures() {
 }
 
 void Loop::printCount() {
-  std::cout << "T(n)= ";
+  std::cout << "T(n) = ";
   _polyCount.printTerms();
 }
