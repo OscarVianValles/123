@@ -40,7 +40,7 @@ void Loop::_tokenizeParenContent(std::string &parenContent) {
       _counter.tokenize(_iterator.tokenize(token));
       break;
     case 1:
-      _condition.tokenize(token, _iterator.getIterator());
+      _condition.tokenize(token);
       break;
     case 2:
       _operator.tokenize(token);
@@ -59,93 +59,54 @@ void Loop::_tokenizeBracketContent(std::string &bracketContent) {
   std::string token;
 
   while (std::getline(tempStream, token, ';')) {
-
-    // Finding if operator modifier is inside the main loop
-    // TODO: Make it more robust
-    int operatorLocation = token.find(_iterator);
-    if (operatorLocation != std::string::npos && _operator.empty()) {
-      operatorLocation += _iterator.length();
-
-      // Logical XOR Operator. This is done to get += =iter+1 and other
-      // operators that can operate on the iterator but not ==
-      if ((!(token[operatorLocation] == '=') !=
-           !(token[operatorLocation + 1] == '=')) ||
-          ((token[operatorLocation] == '+' &&
-            token[operatorLocation + 1] == '+')) ||
-          ((token[operatorLocation] == '-' &&
-            token[operatorLocation - 1] == '-'))) {
-        _operator = token;
-      }
-    } else {
-      _procedures.push_back(token);
-    }
+    _procedures.push_back(token);
   }
 }
 
 void Loop::printMembers() {
-  std::cout << "==========[ Loop ]==========" << std::endl
-            << "Iterator: " << _iterator << std::endl
-            << "Intial Counter Number: " << _counterNumber << std::endl
-            << "Intial Counter Var: " << _counterVar << std::endl
-            << "Condition Type: " << getConditionRepresentation(_conditionType)
-            << std::endl
-            << "Condition Number: " << _conditionNumber << std::endl
-            << "Condition Var: " << _conditionVar << std::endl
-            << "Operator: " << (_operator.empty() ? "Empty" : _operator)
-            << std::endl
-            << std::endl
-            << "Procedures: " << std::endl;
-
   for (auto &i : _procedures) {
     std::cout << i << std::endl;
   }
-
   std::cout << std::endl;
 }
 
 void Loop::count() {
-  Term inLoop(_countProcedures() + _countParametersInLoop(), 0);
-  inLoop.applySummation(true, _counterNumber, _conditionNumber, "");
-  polyCount += inLoop;
-  Term afterLoop(_countParametersAfterLoop(), 0);
-  polyCount += afterLoop;
-}
+  // Counts the procedures + condition + operator
+  Term inLoop(_countProcedures() + _condition.getCount() + _operator.getCount(),
+              0);
 
-int Loop::_countParametersInLoop() {
-  int count = 0;
+  _polyCount.append(inLoop);
 
-  // Get count from condition
-  if (_conditionType <= Conditions::equal) {
-    count++;
+  // If counter is a number, condition is not and operator is multiply
+  if ((_counter.getIsNumber() && !_condition.getIsNumber()) &&
+      (_operator.getOperatorType() & Operator::Operators::multiply)) {
+    _polyCount.applySummation(false, true, _counter.getCounterNumber(), 0, "",
+                              _operator.getOperatorNumber());
   }
 
-  // Get count from operators
-  if (_operatorType <= Operators::modulo) {
-    count++;
+  // If counter is a number but condition is not
+  else if (_counter.getIsNumber() && !_condition.getIsNumber()) {
+    _polyCount.applySummation(false, false, _counter.getCounterNumber(), 0,
+                              _condition.getConditionVar(), 0);
+  }
+  // If both the counter and condition are numbers
+  else if (_counter.getIsNumber() && _condition.getIsNumber()) {
+    _polyCount.applySummation(true, false, _counter.getCounterNumber(),
+                              _condition.getConditionNumber(), "", 0);
   }
 
-  return count;
-}
-
-int Loop::_countParametersAfterLoop() {
-  int count = 0;
-
-  // Get count from iterator
-  count++;
-
-  // Get count from condition
-  if (_conditionType <= Conditions::equal) {
-    count++;
-  }
-
-  return count;
+  // Counts the creation of the iterator and the last condition check
+  Term afterLoop(1 + _condition.getCount(), 0);
+  _polyCount.append(afterLoop);
 }
 
 int Loop::_countProcedures() {
   int count = 0;
-  for (auto &i : _procedures) {
-    for (auto &j : i) {
-      if (j == '+' || j == '-' || j == '*' || j == '/' || j == '=') {
+  for (auto &procedure : _procedures) {
+    const int procedureLength = procedure.length();
+    for (int j = 0; j < procedureLength; j++) {
+      if (procedure[j] == '+' || procedure[j] == '-' || procedure[j] == '*' ||
+          procedure[j] == '/' || procedure[j] == '=') {
         count++;
       }
     }
@@ -153,4 +114,7 @@ int Loop::_countProcedures() {
   return count;
 }
 
-void Loop::printCount() { polyCount.printTerms(); }
+void Loop::printCount() {
+  std::cout << "T(n)= ";
+  _polyCount.printTerms();
+}

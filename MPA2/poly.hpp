@@ -12,11 +12,12 @@ private:
   std::list<Term> terms;
 
 public:
-  bool operator+=(Term &input);
-  bool operator*=(Term &input);
+  bool append(Term &input);
+  bool multiply(Term &input);
 
-  bool applySummation(bool isNumber, int lowerLimit, int upperLimitInt,
-                      std::string upperLimitString);
+  bool applySummation(bool isUpperLimitVariable, bool isLogarithmic,
+                      int lowerLimit, int upperLimitInt,
+                      std::string upperLimitString, int logarithmicBase);
   void printTerms() const;
 };
 

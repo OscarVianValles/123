@@ -1,10 +1,37 @@
 #include "term.hpp"
 
+Term::Term() {
+  _coefficient = 1;
+  _exponent = 1;
+  _variable = 'x';
+  _type = Function::none;
+  _functionNumber = 0;
+}
+
+Term::Term(int coefficient, int exponent) {
+  this->_coefficient = coefficient;
+  this->_exponent = exponent;
+  _variable = 'x';
+  _type = Function::none;
+  _functionNumber = 0;
+}
+
+Term::Term(int coefficient, int exponent, char variable) {
+  this->_coefficient = coefficient;
+  this->_exponent = exponent;
+  this->_variable = variable;
+  _type = Function::none;
+  _functionNumber = 0;
+}
 int Term::getCoefficient() const { return _coefficient; }
 
 int Term::getExponent() const { return _exponent; }
 
-char Term::getVariable() const { return _variable; }
+std::string Term::getVariable() const { return _variable; }
+
+Term::Function Term::getType() const { return _type; }
+
+int Term::getFunctionNumber() const { return _functionNumber; }
 
 bool Term::addCoefficient(int x) {
   _coefficient += x;
@@ -17,9 +44,14 @@ bool Term::multiplyTerm(Term &input) {
   return true;
 }
 
-bool Term::applySummation(bool isNumber, int lowerLimit, int upperLimitInt,
-                          std::string upperLimitString) {
-  if (isNumber) {
+bool Term::applySummation(bool isUpperLimitVariable, bool isLogarithmic,
+                          int lowerLimit, int upperLimitInt,
+                          std::string upperLimitString, int logarithmicBase) {
+
+  if (isLogarithmic) {
+    _type = Function::log;
+    _functionNumber = logarithmicBase;
+  } else if (isUpperLimitVariable) {
     // Checking if lowerLimit is is less than the upperlimit
     if (lowerLimit > upperLimitInt) {
       _coefficient = 0;
@@ -38,25 +70,10 @@ bool Term::applySummation(bool isNumber, int lowerLimit, int upperLimitInt,
       _coefficient *= upperLimitInt;
       return true;
     }
+  } else {
+    _variable = upperLimitString;
+    _exponent = 1;
   }
 
   return false;
-}
-
-Term::Term() {
-  _coefficient = 1;
-  _exponent = 1;
-  _variable = 'x';
-}
-
-Term::Term(int coefficient, int exponent) {
-  this->_coefficient = coefficient;
-  this->_exponent = exponent;
-  _variable = 'x';
-}
-
-Term::Term(int coefficient, int exponent, char variable) {
-  this->_coefficient = coefficient;
-  this->_exponent = exponent;
-  this->_variable = variable;
 }

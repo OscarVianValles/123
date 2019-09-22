@@ -68,7 +68,6 @@ void tokenizeLoops(std::list<std::string> &loopHolder) {
   for (auto &i : loopHolder) {
     Loop holder;
     holder.tokenize(i);
-    holder.printMembers();
     holder.count();
     holder.printCount();
   }

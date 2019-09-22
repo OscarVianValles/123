@@ -11,13 +11,11 @@
 #include "iterator.hpp"
 #include "operator.hpp"
 #include "poly.hpp"
-#include "utils.hpp"
 
 // creating loop class
 class Loop {
 
 public:
-  Loop();
   void tokenize(std::string file);
   void count();
   void printMembers();
@@ -37,11 +35,8 @@ private:
   void _tokenizeParenContent(std::string &parenContent);
   void _tokenizeBracketContent(std::string &bracketContent);
 
-  // Counts the loop
+  // Counts the procedures
   int _countProcedures();
-  int _countParametersInLoop();
-  int _countParametersAfterLoop();
-  int _countUpperLimit();
 };
 
 #endif

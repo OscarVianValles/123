@@ -1,7 +1,7 @@
 #include "condition.hpp"
 
 Condition::Condition() {
-  _isNumber = false;
+  _isNumber = true;
   _isRoot = false;
   _conditionType = 0;
   _conditionNumber = 0;
