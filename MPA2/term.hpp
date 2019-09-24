@@ -21,9 +21,9 @@ public:
   bool multiplyTerm(Term &input);
   bool divide(int divisor);
 
-  bool applySummation(bool isUpperLimitNumber, bool isLogarithmic,
+  bool applySummation(bool isUpperLimitNumber, bool isLogarithmic, bool isRoot,
                       int lowerLimit, int upperLimitInt,
-                      std::string upperLimitString, int logarithmicBase);
+                      std::string upperLimitString);
 
 private:
   bool _infinite;

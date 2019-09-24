@@ -79,8 +79,8 @@ bool Poly::divide(int divisor) {
 }
 // Apply summation to all members of the polynomial
 bool Poly::applySummation(bool isUpperLimitNumber, bool isLogarithmic,
-                          int lowerLimit, int upperLimitInt,
-                          std::string upperLimitString, int logarithmicBase) {
+                          bool isRoot, int lowerLimit, int upperLimitInt,
+                          std::string upperLimitString) {
   for (auto it = terms.begin(); it != terms.end(); it++) {
 
     // If upper limit is not a number and the lower limit is != 1, a formula is
@@ -91,10 +91,9 @@ bool Poly::applySummation(bool isUpperLimitNumber, bool isLogarithmic,
       Term newTerm(0 - it->getCoefficient(), it->getExponent());
 
       // apply summation to both
-      it->applySummation(isUpperLimitNumber, isLogarithmic, 1, upperLimitInt,
-                         upperLimitString, logarithmicBase);
-      newTerm.applySummation(true, false, 1, lowerLimit - 1, "",
-                             logarithmicBase);
+      it->applySummation(isUpperLimitNumber, isLogarithmic, isRoot, 1,
+                         upperLimitInt, upperLimitString);
+      newTerm.applySummation(true, false, false, 1, lowerLimit - 1, "");
 
       // Append new term
       this->append(newTerm);
@@ -104,9 +103,9 @@ bool Poly::applySummation(bool isUpperLimitNumber, bool isLogarithmic,
     } else {
 
       // If upper limit is a number, normal summation rules are applied
-      if (it->applySummation(isUpperLimitNumber, isLogarithmic, lowerLimit,
-                             upperLimitInt, upperLimitString,
-                             logarithmicBase) == false) {
+      if (it->applySummation(isUpperLimitNumber, isLogarithmic, isRoot,
+                             lowerLimit, upperLimitInt,
+                             upperLimitString) == false) {
         return false;
       }
     }
@@ -126,12 +125,41 @@ void Poly::printTerms() const {
 
     std::string currVariableString = "";
     std::string currCoefficientString = "";
+    std::string currRootString = "";
 
     // Handle all variable printing depending on exponent
     if (currExponent > 1) {
       currVariableString = currVariable + "^" + std::to_string(currExponent);
     } else if (currExponent == 1) {
       currVariableString = currVariable;
+    } else if (currExponent < 1 && currExponent > 0) {
+      const int currExponentTemp = currExponent * 10;
+      switch (currExponentTemp) {
+      case 2:
+        currRootString = "sqrt(";
+        break;
+      case 3:
+        currRootString = "cubert(";
+        break;
+      case 4:
+        currRootString = "fourthrt(";
+        break;
+      case 5:
+        currRootString = "fifthrt(";
+        break;
+      case 6:
+        currRootString = "sixthrt(";
+        break;
+      case 7:
+        currRootString = "seventhrt(";
+        break;
+      case 8:
+        currRootString = "eightrt(";
+        break;
+      case 9:
+        currRootString = "nintht(";
+        break;
+      }
     }
 
     // Handle coefficient printing
@@ -154,6 +182,9 @@ void Poly::printTerms() const {
     if (currExponent < 0) {
       std::cout << currCoefficientString << " log(" << std::abs(currExponent)
                 << ") " << currVariableString;
+    } else if (currExponent > 0 && currExponent < 1) {
+      std::cout << currCoefficientString << currRootString << currVariableString
+                << ")";
     } else {
       std::cout << currCoefficientString << currVariableString;
     }

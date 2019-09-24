@@ -68,3 +68,20 @@ for (int i = n; i <= 1; i /= 3) {
     a = 2 * b;
     b *= 3 + c
 }
+
+
+for (int i = 1; i * i <= n; i++) {
+    a = 2 * b;
+    a = a + c + f;
+}
+
+for (int i = 1; i * i * i <= n; i++) {
+    a = a + c + f;
+    b *= 3 + c
+    b += a;
+}
+
+for (int i = 1; i * i * i <= n; i++) {
+    b += a;
+    a--;
+}

@@ -78,23 +78,29 @@ void Loop::count() {
 
     _polyCount.append(inLoop);
 
+    if (_condition.getIsRoot()) {
+      _polyCount.applySummation(false, false, true, _counter.getCounterNumber(),
+                                _condition.getRootNumber(),
+                                _condition.getConditionVar());
+    }
     // If counter is a number, condition is not and operator is multiply
-    if ((!_condition.getIsNumber()) &&
-        (_operator.getOperatorType() == Operator::Operators::multiply)) {
-      _polyCount.applySummation(true, true, _counter.getCounterNumber(), 0,
-                                _condition.getConditionVar(),
-                                _operator.getOperatorNumber());
+    else if ((!_condition.getIsNumber()) &&
+             (_operator.getOperatorType() == Operator::Operators::multiply)) {
+      _polyCount.applySummation(true, true, false, _counter.getCounterNumber(),
+                                _operator.getOperatorNumber(),
+                                _condition.getConditionVar());
     }
 
     // If counter is a number but condition is not
     else if (!_condition.getIsNumber()) {
-      _polyCount.applySummation(false, false, _counter.getCounterNumber(), 0,
-                                _condition.getConditionVar(), 0);
+      _polyCount.applySummation(false, false, false,
+                                _counter.getCounterNumber(), 0,
+                                _condition.getConditionVar());
     }
     // If both the counter and condition are numbers
     else if (_condition.getIsNumber()) {
-      _polyCount.applySummation(true, false, _counter.getCounterNumber(),
-                                _condition.getConditionNumber(), "", 0);
+      _polyCount.applySummation(true, false, false, _counter.getCounterNumber(),
+                                _condition.getConditionNumber(), "");
     }
 
     // Divides based on operatorNumber

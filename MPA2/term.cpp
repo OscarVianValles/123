@@ -64,12 +64,16 @@ bool Term::divide(int divisor) {
 }
 
 bool Term::applySummation(bool isUpperLimitNumber, bool isLogarithmic,
-                          int lowerLimit, int upperLimitInt,
-                          std::string upperLimitString, int logarithmicBase) {
+                          bool isRoot, int lowerLimit, int upperLimitInt,
+                          std::string upperLimitString) {
 
-  if (isLogarithmic) {
+  if (isRoot) {
+    _exponent = upperLimitInt / 10;
     _variable = upperLimitString;
-    _exponent = -logarithmicBase;
+
+  } else if (isLogarithmic) {
+    _variable = upperLimitString;
+    _exponent = -upperLimitInt;
 
   } else if (isUpperLimitNumber) {
     // Checking if lowerLimit is is less than the upperlimit
