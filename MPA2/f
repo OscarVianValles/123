@@ -39,3 +39,32 @@ for (int i = 3; i <= n; i *= 5) {
     b * 3 + c
     a-;
 }
+
+for (int i = 1; i <= n; i += 5) {
+    b + a;
+    a-;
+    a = b + c + f;
+    b-;
+}
+
+for (int i = 2; i <= n; i += 5) {
+    b + a;
+    a-;
+    a = b + c + f;
+}
+
+for (int i = n; i <= 1; i--) {
+
+}
+
+
+for (int i = n; i <= 1; i -= 3) {
+    b += a;
+    a--;
+    a = b + c + f;
+}
+
+for (int i = n; i <= 1; i /= 3) {
+    a = 2 * b;
+    b *= 3 + c
+}

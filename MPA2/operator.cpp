@@ -1,7 +1,8 @@
 #include "operator.hpp"
+#include <iostream>
 
 Operator::Operator() {
-  _operatorType = 0;
+  _operatorType = Operators::none;
   _operatorNumber = 0;
 }
 

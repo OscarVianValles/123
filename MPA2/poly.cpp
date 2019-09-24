@@ -65,6 +65,18 @@ bool Poly::multiply(Term &input) {
   return true;
 }
 
+bool Poly::divide(int divisor) {
+  if (divisor == 1) {
+    return true;
+  } else {
+    for (auto &i : terms) {
+      if (i.divide(divisor) == false) {
+        return false;
+      }
+    }
+  }
+  return true;
+}
 // Apply summation to all members of the polynomial
 bool Poly::applySummation(bool isUpperLimitNumber, bool isLogarithmic,
                           int lowerLimit, int upperLimitInt,
@@ -108,20 +120,28 @@ void Poly::printTerms() const {
   for (auto i = terms.begin(); i != terms.end(); ++i) {
     auto &curr = *i;
     const int currCoefficient = curr.getCoefficient();
+    const int currCoefficientDenominator = curr.getCoefficientDenominator();
     const int currExponent = curr.getExponent();
-    const int currFunctionNumber = curr.getFunctionNumber();
     const std::string currVariable = curr.getVariable();
-    const Term::Function currType = curr.getType();
 
     std::string currVariableString = "";
+    std::string currCoefficientString = "";
 
     // Handle all variable printing depending on exponent
     if (currExponent > 1) {
-      currVariableString.append(currVariable);
-      currVariableString.append("^");
-      currVariableString.append(std::to_string(currExponent));
+      currVariableString = currVariable + "^" + std::to_string(currExponent);
     } else if (currExponent == 1) {
       currVariableString = currVariable;
+    }
+
+    // Handle coefficient printing
+    if (currCoefficientDenominator == 1) {
+      currCoefficientString = std::to_string(std::abs(currCoefficient));
+    } else if (currCoefficientDenominator > 1) {
+      currCoefficientString = std::to_string(std::abs(currCoefficient)) +
+                              currVariableString + "/" +
+                              std::to_string(currCoefficientDenominator);
+      currVariableString = "";
     }
 
     // Handle prepending + or - depending on sign
@@ -131,11 +151,11 @@ void Poly::printTerms() const {
       std::cout << ((currCoefficient < 0) ? "-" : "");
     }
 
-    if (currType == Term::Function::log) {
-      std::cout << std::abs(currCoefficient) << " log(" << currFunctionNumber
+    if (currExponent < 0) {
+      std::cout << currCoefficientString << " log(" << std::abs(currExponent)
                 << ") " << currVariableString;
     } else {
-      std::cout << std::abs(currCoefficient) << currVariableString;
+      std::cout << currCoefficientString << currVariableString;
     }
   }
 

@@ -10,28 +10,27 @@ public:
   Term();
   Term(int coefficient, int exponent);
   Term(int coefficient, int exponent, char variable);
-
-  enum Function { none, root, log };
-
+  Term(bool isInfinite);
   int getCoefficient() const;
+  int getCoefficientDenominator() const;
   int getExponent() const;
+  bool getIsInfinite() const;
   std::string getVariable() const;
-  Term::Function getType() const;
-  int getFunctionNumber() const;
 
   bool addCoefficient(int x);
   bool multiplyTerm(Term &input);
+  bool divide(int divisor);
 
   bool applySummation(bool isUpperLimitNumber, bool isLogarithmic,
                       int lowerLimit, int upperLimitInt,
                       std::string upperLimitString, int logarithmicBase);
 
 private:
+  bool _infinite;
   int _coefficient;
+  int _coefficientDenominator;
   int _exponent;
   std::string _variable;
-  Term::Function _type;
-  int _functionNumber;
 };
 
 #endif

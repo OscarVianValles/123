@@ -72,28 +72,36 @@ void Loop::printMembers() {
 
 void Loop::count() {
   // Counts the procedures + condition + operator
-  Term inLoop(_countProcedures() + _condition.getCount() + _operator.getCount(),
-              0);
+  if (_counter.getIsNumber()) {
+    Term inLoop(
+        _countProcedures() + _condition.getCount() + _operator.getCount(), 0);
 
-  _polyCount.append(inLoop);
+    _polyCount.append(inLoop);
 
-  // If counter is a number, condition is not and operator is multiply
-  if ((_counter.getIsNumber() && !_condition.getIsNumber()) &&
-      (_operator.getOperatorType() & Operator::Operators::multiply)) {
-    _polyCount.applySummation(true, true, _counter.getCounterNumber(), 0,
-                              _condition.getConditionVar(),
-                              _operator.getOperatorNumber());
-  }
+    // If counter is a number, condition is not and operator is multiply
+    if ((!_condition.getIsNumber()) &&
+        (_operator.getOperatorType() == Operator::Operators::multiply)) {
+      _polyCount.applySummation(true, true, _counter.getCounterNumber(), 0,
+                                _condition.getConditionVar(),
+                                _operator.getOperatorNumber());
+    }
 
-  // If counter is a number but condition is not
-  else if (_counter.getIsNumber() && !_condition.getIsNumber()) {
-    _polyCount.applySummation(false, false, _counter.getCounterNumber(), 0,
-                              _condition.getConditionVar(), 0);
-  }
-  // If both the counter and condition are numbers
-  else if (_counter.getIsNumber() && _condition.getIsNumber()) {
-    _polyCount.applySummation(true, false, _counter.getCounterNumber(),
-                              _condition.getConditionNumber(), "", 0);
+    // If counter is a number but condition is not
+    else if (!_condition.getIsNumber()) {
+      _polyCount.applySummation(false, false, _counter.getCounterNumber(), 0,
+                                _condition.getConditionVar(), 0);
+    }
+    // If both the counter and condition are numbers
+    else if (_condition.getIsNumber()) {
+      _polyCount.applySummation(true, false, _counter.getCounterNumber(),
+                                _condition.getConditionNumber(), "", 0);
+    }
+
+    // Divides based on operatorNumber
+    if (_operator.getOperatorType() == Operator::Operators::add) {
+      _polyCount.divide(_operator.getOperatorNumber());
+    }
+  } else {
   }
 
   // Counts the creation of the iterator and the last condition check

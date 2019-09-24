@@ -11,7 +11,7 @@ private:
 public:
   Operator();
 
-  enum Operators { add, subtract, multiply, divide };
+  enum Operators { none, add, subtract, multiply, divide };
   int getCount() const;
   int getOperatorType() const;
   int getOperatorNumber() const;

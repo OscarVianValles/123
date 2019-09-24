@@ -14,6 +14,7 @@ private:
 public:
   bool append(Term &input);
   bool multiply(Term &input);
+  bool divide(int divisor);
 
   bool applySummation(bool isUpperLimitNumber, bool isLogarithmic,
                       int lowerLimit, int upperLimitInt,
