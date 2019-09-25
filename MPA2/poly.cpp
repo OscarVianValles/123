@@ -13,14 +13,13 @@ bool Poly::append(Term &input) {
   // Saving input data to reduce function calls
   const std::string inputVariable = input.getVariable();
   const int inputCoefficient = input.getCoefficient();
-  int inputExponent = input.getExponent();
+  double inputExponent = input.getExponent();
 
   if (inputExponent < 0) {
     inputExponent *= -10000;
   } else if (inputExponent < 1 && inputExponent > 0) {
     inputExponent *= 100;
   }
-
   int prevExponent = std::numeric_limits<int>::max();
   auto i = terms.begin();
   // Looping through each member of terms
@@ -29,11 +28,11 @@ bool Poly::append(Term &input) {
     // Saving i data to reduce function calls
     auto &curr = *i;
     const std::string currVariable = curr.getVariable();
-    int currExponent = curr.getExponent();
+    double currExponent = curr.getExponent();
 
     if (currExponent < 0) {
       currExponent *= -10000;
-    } else if (inputExponent < 1 && inputExponent > 0) {
+    } else if (currExponent < 1 && currExponent > 0) {
       currExponent *= 100;
     }
     // Check if variables are the same
@@ -44,14 +43,15 @@ bool Poly::append(Term &input) {
         curr.addCoefficient(inputCoefficient);
         return true;
       }
-
-      // Checks if prevExponent > inputExponent > currExponent which means that
-      // it should be added in between
-      if (prevExponent > inputExponent && currExponent < inputExponent) {
-        terms.insert(i, input);
-        return true;
-      }
     }
+
+    // Checks if prevExponent > inputExponent > currExponent which means that
+    // it should be added in between
+    if (prevExponent > inputExponent && currExponent < inputExponent) {
+      terms.insert(i, input);
+      return true;
+    }
+
     prevExponent = currExponent;
   }
 

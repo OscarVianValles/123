@@ -5,7 +5,7 @@ Term::Term() {
   _coefficient = 1;
   _coefficientDenominator = 1;
   _exponent = 1;
-  _variable = 'x';
+  _variable = '(';
 }
 
 Term::Term(int coefficient, int exponent) {
@@ -100,8 +100,9 @@ bool Term::applySummation(bool isUpperLimitNumber, bool isLogarithmic,
       return true;
     }
   } else {
+    _exponent = _variable == upperLimitString ? _exponent + 1 : 1;
     _variable = upperLimitString;
-    _exponent = 1;
+    return true;
   }
 
   return false;

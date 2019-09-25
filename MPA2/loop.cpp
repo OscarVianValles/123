@@ -1,5 +1,6 @@
 #include "loop.hpp"
 
+Loop::Loop() { _innerLoop = nullptr; }
 void Loop::tokenize(std::string file) {
   // Gets the next character after the parenthesis
   unsigned openParen = file.find("(") + 1;
@@ -55,9 +56,23 @@ void Loop::_tokenizeParenContent(std::string &parenContent) {
 
 void Loop::_tokenizeBracketContent(std::string &bracketContent) {
   // Creating buffer variables
+
+  const size_t forLocation = bracketContent.find("for");
+  if (forLocation != std::string::npos) {
+    const size_t endLocation = bracketContent.find("}");
+    std::string forString =
+        bracketContent.substr(forLocation, endLocation - forLocation + 1);
+
+    bracketContent =
+        bracketContent.erase(forLocation, endLocation - forLocation + 1);
+    Loop *innerLoop = new Loop;
+    innerLoop->tokenize(forString);
+    innerLoop->count();
+    _innerLoop = innerLoop;
+  }
+
   std::istringstream tempStream(bracketContent);
   std::string token;
-
   while (std::getline(tempStream, token, ';')) {
     _procedures.push_back(token);
   }
@@ -73,7 +88,21 @@ void Loop::printMembers() {
 void Loop::count() {
   bool isInfinite = false;
   // Counts the procedures + condition + operator
-  if (_counter.getIsNumber()) {
+  if (_innerLoop != nullptr) {
+    std::list<Term> termHolder = _innerLoop->getCount().getTerms();
+    for (auto &j : termHolder) {
+      _polyCount.append(j);
+    }
+
+    Term loopContent(
+        _countProcedures() + _condition.getCount() + _operator.getCount(), 0);
+
+    _polyCount.append(loopContent);
+
+    _polyCount.applySummation(false, false, false, _counter.getCounterNumber(),
+                              0, _condition.getConditionVar());
+
+  } else if (_counter.getIsNumber()) {
     if ((!_condition.getIsNumber() &&
          _operator.getOperatorType() == Operator::Operators::subtract) ||
 

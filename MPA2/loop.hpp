@@ -16,6 +16,7 @@
 class Loop {
 
 public:
+  Loop();
   void tokenize(std::string file);
   void count();
   void printMembers();
@@ -29,6 +30,8 @@ private:
   Counter _counter;                   // Object that stores the counter
   Operator _operator;                 // Object that stores the operator
   std::list<std::string> _procedures; // The list of all procedures in the loop
+
+  Loop *_innerLoop; // The inner loop
 
   Poly _polyCount; // The polynomial that stores the count
 
