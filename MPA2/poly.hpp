@@ -20,6 +20,7 @@ public:
                       int lowerLimit, int upperLimitInt,
                       std::string upperLimitString);
   void printTerms() const;
+  std::list<Term> getTerms() const;
 };
 
 #endif

@@ -20,6 +20,7 @@ public:
   void count();
   void printMembers();
   void printCount();
+  Poly getCount() const;
 
 private:
   // Contents of the loop

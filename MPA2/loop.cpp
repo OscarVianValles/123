@@ -153,3 +153,5 @@ void Loop::printCount() {
   std::cout << "T(n) = ";
   _polyCount.printTerms();
 }
+
+Poly Loop::getCount() const { return _polyCount; }

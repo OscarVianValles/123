@@ -8,7 +8,7 @@
 #include "poly.hpp"
 
 void readFile(std::ifstream &input, std::list<std::string> &loopHolder);
-void tokenizeLoops(std::list<std::string> &loopHolder);
+void tokenizeLoops(std::list<std::string> &loopHolder, Poly &fileCount);
 int main() {
 
   // Opening File
@@ -17,10 +17,17 @@ int main() {
   std::cin >> fileName;
   std::ifstream input(fileName);
 
+  Poly test;
+
   // Creating strings from file;
   std::list<std::string> loopHolder;
   readFile(input, loopHolder);
-  tokenizeLoops(loopHolder);
+  Poly fileCount;
+  tokenizeLoops(loopHolder, fileCount);
+
+  // Print final count of file
+  std::cout << "T(n) = ";
+  fileCount.printTerms();
 
   return 0;
 }
@@ -64,11 +71,15 @@ void readFile(std::ifstream &input, std::list<std::string> &loopHolder) {
   }
 }
 
-void tokenizeLoops(std::list<std::string> &loopHolder) {
+void tokenizeLoops(std::list<std::string> &loopHolder, Poly &fileCount) {
   for (auto &i : loopHolder) {
     Loop holder;
+    std::list<Term> termHolder;
     holder.tokenize(i);
     holder.count();
-    holder.printCount();
+    termHolder = holder.getCount().getTerms();
+    for (auto &j : termHolder) {
+      fileCount.append(j);
+    }
   }
 }

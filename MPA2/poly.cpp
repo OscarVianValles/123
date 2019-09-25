@@ -1,5 +1,7 @@
 #include "poly.hpp"
 
+std::list<Term> Poly::getTerms() const { return terms; }
+
 bool Poly::append(Term &input) {
 
   // Handle if terms are empty
@@ -11,7 +13,13 @@ bool Poly::append(Term &input) {
   // Saving input data to reduce function calls
   const std::string inputVariable = input.getVariable();
   const int inputCoefficient = input.getCoefficient();
-  const int inputExponent = input.getExponent();
+  int inputExponent = input.getExponent();
+
+  if (inputExponent < 0) {
+    inputExponent *= -10000;
+  } else if (inputExponent < 1 && inputExponent > 0) {
+    inputExponent *= 100;
+  }
 
   int prevExponent = std::numeric_limits<int>::max();
   auto i = terms.begin();
@@ -21,8 +29,13 @@ bool Poly::append(Term &input) {
     // Saving i data to reduce function calls
     auto &curr = *i;
     const std::string currVariable = curr.getVariable();
-    const int currExponent = curr.getExponent();
+    int currExponent = curr.getExponent();
 
+    if (currExponent < 0) {
+      currExponent *= -10000;
+    } else if (inputExponent < 1 && inputExponent > 0) {
+      currExponent *= 100;
+    }
     // Check if variables are the same
     if (inputVariable == currVariable) {
 
@@ -34,16 +47,11 @@ bool Poly::append(Term &input) {
 
       // Checks if prevExponent > inputExponent > currExponent which means that
       // it should be added in between
-      else if (prevExponent > inputExponent && currExponent < inputExponent) {
+      if (prevExponent > inputExponent && currExponent < inputExponent) {
         terms.insert(i, input);
         return true;
       }
-
-    } else if (inputVariable < currVariable) {
-      terms.insert(++i, input);
-      return true;
     }
-
     prevExponent = currExponent;
   }
 
@@ -132,7 +140,8 @@ void Poly::printTerms() const {
 
       // Handle all variable printing depending on exponent
       if (currExponent > 1) {
-        currVariableString = currVariable + "^" + std::to_string(currExponent);
+        currVariableString =
+            currVariable + "^" + std::to_string(static_cast<int>(currExponent));
       } else if (currExponent == 1 || currExponent < 0) {
         currVariableString = currVariable;
       } else if (currExponent < 1 && currExponent > 0) {
