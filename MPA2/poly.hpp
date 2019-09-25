@@ -16,7 +16,7 @@ public:
   bool multiply(Term &input);
   bool divide(int divisor);
 
-  bool applySummation(bool isUpperLimitNumber, bool isLogarithmic, bool isLoop,
+  bool applySummation(bool isUpperLimitNumber, bool isLogarithmic, bool isRoot,
                       int lowerLimit, int upperLimitInt,
                       std::string upperLimitString);
   void printTerms() const;

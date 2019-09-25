@@ -30,7 +30,7 @@ int Term::getCoefficient() const { return _coefficient; }
 
 int Term::getCoefficientDenominator() const { return _coefficientDenominator; }
 
-int Term::getExponent() const { return _exponent; }
+double Term::getExponent() const { return _exponent; }
 
 std::string Term::getVariable() const { return _variable; }
 
@@ -68,7 +68,7 @@ bool Term::applySummation(bool isUpperLimitNumber, bool isLogarithmic,
                           std::string upperLimitString) {
 
   if (isRoot) {
-    _exponent = upperLimitInt / 10;
+    _exponent = static_cast<double>(upperLimitInt) / 10.0;
     _variable = upperLimitString;
 
   } else if (isLogarithmic) {

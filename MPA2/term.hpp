@@ -13,7 +13,7 @@ public:
   Term(bool isInfinite);
   int getCoefficient() const;
   int getCoefficientDenominator() const;
-  int getExponent() const;
+  double getExponent() const;
   bool getIsInfinite() const;
   std::string getVariable() const;
 
@@ -29,7 +29,7 @@ private:
   bool _infinite;
   int _coefficient;
   int _coefficientDenominator;
-  int _exponent;
+  double _exponent;
   std::string _variable;
 };
 

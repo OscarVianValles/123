@@ -120,7 +120,7 @@ void Poly::printTerms() const {
     auto &curr = *i;
     const int currCoefficient = curr.getCoefficient();
     const int currCoefficientDenominator = curr.getCoefficientDenominator();
-    const int currExponent = curr.getExponent();
+    const double currExponent = curr.getExponent();
     const std::string currVariable = curr.getVariable();
 
     std::string currVariableString = "";
@@ -130,36 +130,37 @@ void Poly::printTerms() const {
     // Handle all variable printing depending on exponent
     if (currExponent > 1) {
       currVariableString = currVariable + "^" + std::to_string(currExponent);
-    } else if (currExponent == 1) {
+    } else if (currExponent == 1 || currExponent < 0) {
       currVariableString = currVariable;
     } else if (currExponent < 1 && currExponent > 0) {
       const int currExponentTemp = currExponent * 10;
       switch (currExponentTemp) {
       case 2:
-        currRootString = "sqrt(";
+        currRootString = " sqrt(";
         break;
       case 3:
-        currRootString = "cubert(";
+        currRootString = " cubert(";
         break;
       case 4:
-        currRootString = "fourthrt(";
+        currRootString = " fourthrt(";
         break;
       case 5:
-        currRootString = "fifthrt(";
+        currRootString = " fifthrt(";
         break;
       case 6:
-        currRootString = "sixthrt(";
+        currRootString = " sixthrt(";
         break;
       case 7:
-        currRootString = "seventhrt(";
+        currRootString = " seventhrt(";
         break;
       case 8:
-        currRootString = "eightrt(";
+        currRootString = " eightrt(";
         break;
       case 9:
-        currRootString = "nintht(";
+        currRootString = " nintht(";
         break;
       }
+      currVariableString = currVariable;
     }
 
     // Handle coefficient printing

@@ -78,7 +78,14 @@ void Loop::count() {
 
     _polyCount.append(inLoop);
 
-    if (_condition.getIsRoot()) {
+    if (!_condition.getIsNumber() &&
+        _operator.getOperatorType() == Operator::Operators::subtract) {
+      _polyCount.applySummation(true, true, false, _counter.getCounterNumber(),
+                                _operator.getOperatorNumber(),
+                                _condition.getConditionVar());
+    }
+
+    else if (_condition.getIsRoot()) {
       _polyCount.applySummation(false, false, true, _counter.getCounterNumber(),
                                 _condition.getRootNumber(),
                                 _condition.getConditionVar());
@@ -120,8 +127,10 @@ int Loop::_countProcedures() {
   for (auto &procedure : _procedures) {
     const int procedureLength = procedure.length();
     for (int j = 0; j < procedureLength; j++) {
-      if (procedure[j] == '+' || procedure[j] == '-' || procedure[j] == '*' ||
-          procedure[j] == '/' || procedure[j] == '=') {
+      if ((procedure[j] == '+' || procedure[j] == '-' || procedure[j] == '*' ||
+           procedure[j] == '/' || procedure[j] == '=') &&
+          !(procedure[j - 1] == '+' || procedure[j - 1] == '-' ||
+            procedure[j - 1] == '*' || procedure[j - 1] == '/')) {
         count++;
       }
     }
