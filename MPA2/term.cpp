@@ -24,7 +24,10 @@ Term::Term(int coefficient, int exponent, char variable) {
   _coefficientDenominator = 1;
 }
 
-Term::Term(bool isInfinite) { _infinite = isInfinite; }
+Term::Term(bool isInfinite) {
+  _infinite = isInfinite;
+  _exponent = 10000000;
+}
 
 int Term::getCoefficient() const { return _coefficient; }
 
@@ -33,6 +36,8 @@ int Term::getCoefficientDenominator() const { return _coefficientDenominator; }
 double Term::getExponent() const { return _exponent; }
 
 std::string Term::getVariable() const { return _variable; }
+
+bool Term::getIsInfinite() const { return _infinite; }
 
 bool Term::addCoefficient(int x) {
   _coefficient += x;

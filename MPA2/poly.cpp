@@ -116,80 +116,84 @@ bool Poly::applySummation(bool isUpperLimitNumber, bool isLogarithmic,
 
 // Prints the terms
 void Poly::printTerms() const {
-  for (auto i = terms.begin(); i != terms.end(); ++i) {
-    auto &curr = *i;
-    const int currCoefficient = curr.getCoefficient();
-    const int currCoefficientDenominator = curr.getCoefficientDenominator();
-    const double currExponent = curr.getExponent();
-    const std::string currVariable = curr.getVariable();
+  if (terms.front().getIsInfinite()) {
+    std::cout << "infinite" << std::endl;
+  } else {
+    for (auto i = terms.begin(); i != terms.end(); ++i) {
+      auto &curr = *i;
+      const int currCoefficient = curr.getCoefficient();
+      const int currCoefficientDenominator = curr.getCoefficientDenominator();
+      const double currExponent = curr.getExponent();
+      const std::string currVariable = curr.getVariable();
 
-    std::string currVariableString = "";
-    std::string currCoefficientString = "";
-    std::string currRootString = "";
+      std::string currVariableString = "";
+      std::string currCoefficientString = "";
+      std::string currRootString = "";
 
-    // Handle all variable printing depending on exponent
-    if (currExponent > 1) {
-      currVariableString = currVariable + "^" + std::to_string(currExponent);
-    } else if (currExponent == 1 || currExponent < 0) {
-      currVariableString = currVariable;
-    } else if (currExponent < 1 && currExponent > 0) {
-      const int currExponentTemp = currExponent * 10;
-      switch (currExponentTemp) {
-      case 2:
-        currRootString = " sqrt(";
-        break;
-      case 3:
-        currRootString = " cubert(";
-        break;
-      case 4:
-        currRootString = " fourthrt(";
-        break;
-      case 5:
-        currRootString = " fifthrt(";
-        break;
-      case 6:
-        currRootString = " sixthrt(";
-        break;
-      case 7:
-        currRootString = " seventhrt(";
-        break;
-      case 8:
-        currRootString = " eightrt(";
-        break;
-      case 9:
-        currRootString = " nintht(";
-        break;
+      // Handle all variable printing depending on exponent
+      if (currExponent > 1) {
+        currVariableString = currVariable + "^" + std::to_string(currExponent);
+      } else if (currExponent == 1 || currExponent < 0) {
+        currVariableString = currVariable;
+      } else if (currExponent < 1 && currExponent > 0) {
+        const int currExponentTemp = currExponent * 10;
+        switch (currExponentTemp) {
+        case 2:
+          currRootString = " sqrt(";
+          break;
+        case 3:
+          currRootString = " cubert(";
+          break;
+        case 4:
+          currRootString = " fourthrt(";
+          break;
+        case 5:
+          currRootString = " fifthrt(";
+          break;
+        case 6:
+          currRootString = " sixthrt(";
+          break;
+        case 7:
+          currRootString = " seventhrt(";
+          break;
+        case 8:
+          currRootString = " eightrt(";
+          break;
+        case 9:
+          currRootString = " nintht(";
+          break;
+        }
+        currVariableString = currVariable;
       }
-      currVariableString = currVariable;
+
+      // Handle coefficient printing
+      if (currCoefficientDenominator == 1) {
+        currCoefficientString = std::to_string(std::abs(currCoefficient));
+      } else if (currCoefficientDenominator > 1) {
+        currCoefficientString = std::to_string(std::abs(currCoefficient)) +
+                                currVariableString + "/" +
+                                std::to_string(currCoefficientDenominator);
+        currVariableString = "";
+      }
+
+      // Handle prepending + or - depending on sign
+      if (i != terms.begin()) {
+        std::cout << ((currCoefficient < 0) ? " - " : " + ");
+      } else {
+        std::cout << ((currCoefficient < 0) ? "-" : "");
+      }
+
+      if (currExponent < 0) {
+        std::cout << currCoefficientString << " log(" << std::abs(currExponent)
+                  << ") " << currVariableString;
+      } else if (currExponent > 0 && currExponent < 1) {
+        std::cout << currCoefficientString << currRootString
+                  << currVariableString << ")";
+      } else {
+        std::cout << currCoefficientString << currVariableString;
+      }
     }
 
-    // Handle coefficient printing
-    if (currCoefficientDenominator == 1) {
-      currCoefficientString = std::to_string(std::abs(currCoefficient));
-    } else if (currCoefficientDenominator > 1) {
-      currCoefficientString = std::to_string(std::abs(currCoefficient)) +
-                              currVariableString + "/" +
-                              std::to_string(currCoefficientDenominator);
-      currVariableString = "";
-    }
-
-    // Handle prepending + or - depending on sign
-    if (i != terms.begin()) {
-      std::cout << ((currCoefficient < 0) ? " - " : " + ");
-    } else {
-      std::cout << ((currCoefficient < 0) ? "-" : "");
-    }
-
-    if (currExponent < 0) {
-      std::cout << currCoefficientString << " log(" << std::abs(currExponent)
-                << ") " << currVariableString;
-    } else if (currExponent > 0 && currExponent < 1) {
-      std::cout << currCoefficientString << currRootString << currVariableString
-                << ")";
-    } else {
-      std::cout << currCoefficientString << currVariableString;
-    }
+    std::cout << std::endl;
   }
-
-  std::cout << std::endl;
 }

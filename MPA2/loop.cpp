@@ -71,55 +71,60 @@ void Loop::printMembers() {
 }
 
 void Loop::count() {
+  bool isInfinite = false;
   // Counts the procedures + condition + operator
   if (_counter.getIsNumber()) {
-    Term inLoop(
-        _countProcedures() + _condition.getCount() + _operator.getCount(), 0);
-
-    _polyCount.append(inLoop);
-
     if (!_condition.getIsNumber() &&
         _operator.getOperatorType() == Operator::Operators::subtract) {
-      _polyCount.applySummation(true, true, false, _counter.getCounterNumber(),
-                                _operator.getOperatorNumber(),
-                                _condition.getConditionVar());
+      Term infinite(true);
+      _polyCount.append(infinite);
     }
 
-    else if (_condition.getIsRoot()) {
-      _polyCount.applySummation(false, false, true, _counter.getCounterNumber(),
-                                _condition.getRootNumber(),
-                                _condition.getConditionVar());
-    }
-    // If counter is a number, condition is not and operator is multiply
-    else if ((!_condition.getIsNumber()) &&
-             (_operator.getOperatorType() == Operator::Operators::multiply)) {
-      _polyCount.applySummation(true, true, false, _counter.getCounterNumber(),
-                                _operator.getOperatorNumber(),
-                                _condition.getConditionVar());
-    }
+    if (!isInfinite) {
+      Term inLoop(
+          _countProcedures() + _condition.getCount() + _operator.getCount(), 0);
 
-    // If counter is a number but condition is not
-    else if (!_condition.getIsNumber()) {
-      _polyCount.applySummation(false, false, false,
-                                _counter.getCounterNumber(), 0,
-                                _condition.getConditionVar());
-    }
-    // If both the counter and condition are numbers
-    else if (_condition.getIsNumber()) {
-      _polyCount.applySummation(true, false, false, _counter.getCounterNumber(),
-                                _condition.getConditionNumber(), "");
-    }
+      _polyCount.append(inLoop);
 
-    // Divides based on operatorNumber
-    if (_operator.getOperatorType() == Operator::Operators::add) {
-      _polyCount.divide(_operator.getOperatorNumber());
+      if (_condition.getIsRoot()) {
+        _polyCount.applySummation(
+            false, false, true, _counter.getCounterNumber(),
+            _condition.getRootNumber(), _condition.getConditionVar());
+      }
+      // If counter is a number, condition is not and operator is multiply
+      else if ((!_condition.getIsNumber()) &&
+               (_operator.getOperatorType() == Operator::Operators::multiply)) {
+        _polyCount.applySummation(
+            true, true, false, _counter.getCounterNumber(),
+            _operator.getOperatorNumber(), _condition.getConditionVar());
+      }
+
+      // If counter is a number but condition is not
+      else if (!_condition.getIsNumber()) {
+        _polyCount.applySummation(false, false, false,
+                                  _counter.getCounterNumber(), 0,
+                                  _condition.getConditionVar());
+      }
+      // If both the counter and condition are numbers
+      else if (_condition.getIsNumber()) {
+        _polyCount.applySummation(true, false, false,
+                                  _counter.getCounterNumber(),
+                                  _condition.getConditionNumber(), "");
+      }
+
+      // Divides based on operatorNumber
+      if (_operator.getOperatorType() == Operator::Operators::add) {
+        _polyCount.divide(_operator.getOperatorNumber());
+      }
     }
   } else {
   }
 
   // Counts the creation of the iterator and the last condition check
-  Term afterLoop(1 + _condition.getCount(), 0);
-  _polyCount.append(afterLoop);
+  if (!isInfinite) {
+    Term afterLoop(1 + _condition.getCount(), 0);
+    _polyCount.append(afterLoop);
+  }
 }
 
 int Loop::_countProcedures() {
