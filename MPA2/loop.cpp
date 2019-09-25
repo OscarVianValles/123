@@ -74,8 +74,13 @@ void Loop::count() {
   bool isInfinite = false;
   // Counts the procedures + condition + operator
   if (_counter.getIsNumber()) {
-    if (!_condition.getIsNumber() &&
-        _operator.getOperatorType() == Operator::Operators::subtract) {
+    if ((!_condition.getIsNumber() &&
+         _operator.getOperatorType() == Operator::Operators::subtract) ||
+
+        // counter < condition && condition is less && operator is subtract
+        ((_counter.getCounterNumber() < _condition.getConditionNumber()) &&
+         (_condition.getConditionType() & Condition::Conditions::greater) &&
+         (_operator.getOperatorType() == Operator::Operators::add))) {
       Term infinite(true);
       _polyCount.append(infinite);
     }
@@ -86,6 +91,7 @@ void Loop::count() {
 
       _polyCount.append(inLoop);
 
+      // If root handle as root
       if (_condition.getIsRoot()) {
         _polyCount.applySummation(
             false, false, true, _counter.getCounterNumber(),
