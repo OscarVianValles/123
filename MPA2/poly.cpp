@@ -137,10 +137,12 @@ void Poly::printTerms() const {
       std::string currVariableString = "";
       std::string currCoefficientString = "";
       std::string currRootString = "";
+      std::ostringstream currExponentObj;
+      currExponentObj << std::setprecision(2) << currExponent;
 
       // Handle all variable printing depending on exponent
       if (currExponent > 1) {
-        currVariableString = currVariable + "^" + std::to_string(currExponent);
+        currVariableString = currVariable + "^" + currExponentObj.str();
       } else if (currExponent == 1 || currExponent < 0) {
         currVariableString = currVariable;
       } else if (currExponent < 1 && currExponent > 0) {

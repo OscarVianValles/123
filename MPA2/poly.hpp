@@ -3,13 +3,16 @@
 
 #include "term.hpp"
 #include <cmath>
+#include <iomanip>
 #include <iostream>
 #include <limits>
 #include <list>
+#include <sstream>
 
 class Poly {
 private:
   std::list<Term> terms;
+  std::string _getMixedFraction(double x) const;
 
 public:
   bool append(Term &input);
