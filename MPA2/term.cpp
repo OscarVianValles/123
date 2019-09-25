@@ -41,6 +41,10 @@ bool Term::getIsInfinite() const { return _infinite; }
 
 bool Term::addCoefficient(int x) {
   _coefficient += x;
+  if (_coefficient % _coefficientDenominator == 0) {
+    _coefficient /= _coefficientDenominator;
+    _coefficientDenominator = 1;
+  }
   return true;
 }
 
