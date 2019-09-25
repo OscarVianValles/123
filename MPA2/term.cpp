@@ -77,7 +77,7 @@ bool Term::applySummation(bool isUpperLimitNumber, bool isLogarithmic,
                           std::string upperLimitString) {
 
   if (isRoot) {
-    _exponent = static_cast<double>(upperLimitInt) / 10.0;
+    _exponent = 1.0 / static_cast<double>(upperLimitInt);
     _variable = upperLimitString;
 
   } else if (isLogarithmic) {

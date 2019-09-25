@@ -140,13 +140,12 @@ void Poly::printTerms() const {
 
       // Handle all variable printing depending on exponent
       if (currExponent > 1) {
-        currVariableString =
-            currVariable + "^" + std::to_string(static_cast<int>(currExponent));
+        currVariableString = currVariable + "^" + std::to_string(currExponent);
       } else if (currExponent == 1 || currExponent < 0) {
         currVariableString = currVariable;
       } else if (currExponent < 1 && currExponent > 0) {
-        const int currExponentTemp = currExponent * 10;
-        switch (currExponentTemp) {
+        const double currExponentTemp = 1.0 / currExponent;
+        switch (static_cast<int>(currExponentTemp)) {
         case 2:
           currRootString = " sqrt(";
           break;
