@@ -3,6 +3,7 @@
 
 #include <bitset>
 #include <iostream>
+#include <list>
 #include <string>
 
 class Packet {
@@ -12,7 +13,7 @@ private:
   std::string _sourceAddress;
   std::string _destinationAddress;
   unsigned int _sequenceNumber;
-  std::bitset<16> _checksum;
+  std::bitset<17> _checksum;
   unsigned int _lengthOfData;
   std::string _data;
 
@@ -24,7 +25,7 @@ private:
   bool _tokenizeChecksum(std::string &);
   bool _tokenizeLengthOfData(std::string &);
   bool _tokenizeData(std::string &);
-  bool _computeChecksum(std::string &);
+  bool _computeChecksum();
 
 public:
   Packet(const std::string &);

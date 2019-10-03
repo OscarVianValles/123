@@ -2,6 +2,7 @@
 
 Packet::Packet(const std::string &inputString) : _rawPacket(inputString) {
   _tokenize();
+  std::cout << _computeChecksum();
 }
 
 Packet::Packet(const bool &isMissing) { _isMissing = isMissing; }
@@ -103,9 +104,9 @@ bool Packet::_tokenizeSequenceNumber(std::string &inputString) {
   return true;
 }
 
-// TODO
 bool Packet::_tokenizeChecksum(std::string &inputString) {
-  std::cout << inputString.length() << std::endl;
+  std::bitset<17> checksum(inputString);
+  _checksum = checksum;
   return true;
 }
 
@@ -114,8 +115,46 @@ bool Packet::_tokenizeLengthOfData(std::string &inputString) {
   return true;
 }
 
-// TODO
 bool Packet::_tokenizeData(std::string &inputString) {
-  std::cout << inputString.length() << std::endl;
+  while (inputString.length() > 0) {
+    _data.push_back(std::stoull(inputString.substr(0, 8), nullptr, 2));
+    inputString = inputString.erase(0, 8);
+  }
   return true;
+}
+
+bool Packet::_computeChecksum() {
+  std::string checksumData = _rawPacket;
+  int checksumDataLength = checksumData.length(), bitsLength = 0;
+  std::list<std::bitset<17>> bits;
+
+  while (bitsLength < checksumDataLength) {
+    std::bitset<17> checksumPart(checksumData.substr(0, 16));
+    if (bitsLength == 80) {
+      checksumPart.reset();
+    }
+    checksumData = checksumData.erase(0, 16);
+    bits.push_back(checksumPart);
+    bitsLength += 16;
+  }
+
+  std::bitset<17> checksum;
+  unsigned long long holder = 0;
+  unsigned long long checker = std::bitset<17>("10000000000000000").to_ullong();
+
+  for (auto &bit : bits) {
+    holder = checksum.to_ullong() + bit.to_ullong();
+    if (holder & checker) {
+      holder -= checker;
+      holder += 1;
+    }
+
+    std::bitset<17> newChecksum(holder);
+    checksum = newChecksum;
+  }
+
+  checksum.flip();
+  checksum[16] = 0;
+
+  return checksum == _checksum;
 }
