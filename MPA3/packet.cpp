@@ -2,7 +2,7 @@
 
 Packet::Packet(const std::string &inputString) : _rawPacket(inputString) {
   _tokenize();
-  std::cout << _computeChecksum();
+  _computeChecksum();
 }
 
 Packet::Packet(const bool &isMissing) { _isMissing = isMissing; }
@@ -123,7 +123,7 @@ bool Packet::_tokenizeData(std::string &inputString) {
   return true;
 }
 
-bool Packet::_computeChecksum() {
+void Packet::_computeChecksum() {
   std::string checksumData = _rawPacket;
   int checksumDataLength = checksumData.length(), bitsLength = 0;
   std::list<std::bitset<17>> bits;
@@ -156,5 +156,17 @@ bool Packet::_computeChecksum() {
   checksum.flip();
   checksum[16] = 0;
 
-  return checksum == _checksum;
+  _isChecksumPassing = checksum == _checksum;
+}
+
+void Packet::print() const {
+  if (!_isChecksumPassing) {
+    std::cout << "[line corrupted]" << std::endl;
+  } else if (_isMissing && _sequenceNumber == 0) {
+    std::cout << "[title missing]" << std::endl;
+  } else if (_isMissing && _sequenceNumber > 0) {
+    std::cout << "[line missing]" << std::endl;
+  } else {
+    std::cout << _data << std::endl;
+  }
 }

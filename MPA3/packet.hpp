@@ -9,6 +9,7 @@
 class Packet {
 
 private:
+  // Stores all fields
   std::string _rawPacket;
   std::string _sourceAddress;
   std::string _destinationAddress;
@@ -17,22 +18,31 @@ private:
   unsigned int _lengthOfData;
   std::string _data;
 
+  // Handle caveats
   bool _isMissing;
+  bool _isChecksumPassing;
 
+  // Tokenize packet
   bool _tokenize();
   bool _tokenizeAddress(const bool &, std::string &);
   bool _tokenizeSequenceNumber(std::string &);
   bool _tokenizeChecksum(std::string &);
   bool _tokenizeLengthOfData(std::string &);
   bool _tokenizeData(std::string &);
-  bool _computeChecksum();
+
+  // Compute Checksum
+  void _computeChecksum();
 
 public:
+  // Constructors
   Packet(const std::string &);
   Packet(const bool &);
+
+  // Getters
   std::string getSourceAddress() const;
   std::string getDestinationAddress() const;
   unsigned int getSequenceNumber() const;
+  void print() const;
 };
 
 #endif
