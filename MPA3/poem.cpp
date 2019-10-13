@@ -1,19 +1,17 @@
 #include "poem.hpp"
 
-void Poem::_sort() {
-  for (std::list<Packet>::iterator i = _packets.begin(); i != _packets.end();
-       ++i) {
-    for (std::list<Packet>::iterator j = i; j != _packets.end(); ++j) {
-      if (*i.getSequenceNumber() < *j.getSequenceNumber()) {
-      }
-    }
-  }
+bool packetCompare(const Packet &first, const Packet &second) {
+  return first.sequenceNumber() < second.sequenceNumber();
 }
+
+Poem::Poem(Packet initial) { append(initial); }
+
+void Poem::_sort() { _packets.sort(packetCompare); }
 
 void Poem::append(Packet &inputPacket) {
   if (_packets.empty()) {
-    _sourceAddress = inputPacket.getSourceAddress();
-    _destinationAddress = inputPacket.getDestinationAddress();
+    _sourceAddress = inputPacket.sourceAddress();
+    _destinationAddress = inputPacket.destinationAddress();
   }
 
   _packets.push_back(inputPacket);
@@ -24,20 +22,41 @@ void Poem::print() {
   // Sort before printing
   _sort();
 
-  bool isFirst = true;
+  // Delete last packet. Usually is garbage data
+  _packets.pop_back();
+
+  unsigned int expectedSequence = 0;
   for (auto &packet : _packets) {
-    packet.print();
+    if (packet.sequenceNumber() != expectedSequence) {
+      if (expectedSequence == 0) {
+        std::cout << "[title missing]" << std::endl;
+        std::cout << _sourceAddress << "/" << _destinationAddress << std::endl;
+      } else {
+        std::cout << "[line missing]" << std::endl;
+      }
+
+      expectedSequence++;
+    } else {
+      packet.print();
+    }
 
     // If it is the first in the list then it is the title. The following line
     // needs to be the source address and destination address
-    if (isFirst) {
+    if (expectedSequence == 0) {
       std::cout << _sourceAddress << "/" << _destinationAddress << std::endl;
-      isFirst = false;
     }
-  }
-}
 
-bool Poem::isSame(std::string &sourceAddress, std::string &destinationAddress) {
-  return _sourceAddress == sourceAddress &&
-         _destinationAddress == destinationAddress;
+    expectedSequence++;
+  }
+
+  // Print separator
+  std::cout << std::endl
+            << "---------------------------------------------------------------"
+               "-----------------"
+            << std::endl
+            << std::endl;
+}
+bool Poem::isSame(const Packet &packet) {
+  return _sourceAddress == packet.sourceAddress() &&
+         _destinationAddress == packet.destinationAddress();
 }

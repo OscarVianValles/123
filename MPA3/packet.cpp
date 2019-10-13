@@ -5,8 +5,6 @@ Packet::Packet(const std::string &inputString) : _rawPacket(inputString) {
   _computeChecksum();
 }
 
-Packet::Packet(const bool &isMissing) { _isMissing = isMissing; }
-
 bool Packet::_tokenize() {
 
   // Initial field size is 32 as the source address is 32 bits
@@ -159,13 +157,16 @@ void Packet::_computeChecksum() {
   _isChecksumPassing = checksum == _checksum;
 }
 
+// Getters
+std::string Packet::sourceAddress() const { return _sourceAddress; }
+
+std::string Packet::destinationAddress() const { return _destinationAddress; }
+
+unsigned int Packet::sequenceNumber() const { return _sequenceNumber; }
+
 void Packet::print() const {
   if (!_isChecksumPassing) {
     std::cout << "[line corrupted]" << std::endl;
-  } else if (_isMissing && _sequenceNumber == 0) {
-    std::cout << "[title missing]" << std::endl;
-  } else if (_isMissing && _sequenceNumber > 0) {
-    std::cout << "[line missing]" << std::endl;
   } else {
     std::cout << _data << std::endl;
   }

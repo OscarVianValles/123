@@ -12,11 +12,13 @@ private:
   std::list<Packet> _packets;
 
   void _sort();
+  bool _packetCompare(const Packet &, const Packet &);
 
 public:
+  Poem(Packet);
   void append(Packet &);
   void print();
-  bool isSame(std::string &, std::string &);
+  bool isSame(const Packet &packet);
 };
 
 #endif

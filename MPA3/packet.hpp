@@ -19,7 +19,6 @@ private:
   std::string _data;
 
   // Handle caveats
-  bool _isMissing;
   bool _isChecksumPassing;
 
   // Tokenize packet
@@ -36,12 +35,12 @@ private:
 public:
   // Constructors
   Packet(const std::string &);
-  Packet(const bool &);
 
   // Getters
-  std::string getSourceAddress() const;
-  std::string getDestinationAddress() const;
-  unsigned int getSequenceNumber() const;
+  std::string sourceAddress() const;
+  std::string destinationAddress() const;
+  unsigned int sequenceNumber() const;
+
   void print() const;
 };
 
