@@ -11,7 +11,7 @@ private:
   std::string _destinationAddress;
   std::list<Packet> _packets;
 
-  void _sort();
+  void _tidy();
   bool _packetCompare(const Packet &, const Packet &);
 
 public:

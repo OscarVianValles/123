@@ -1,5 +1,6 @@
 #include "packet.hpp"
 
+// All packets are created by calling it with a string as its parameter
 Packet::Packet(const std::string &inputString) : _rawPacket(inputString) {
   _tokenize();
   _computeChecksum();
@@ -103,6 +104,7 @@ bool Packet::_tokenizeSequenceNumber(std::string &inputString) {
 }
 
 bool Packet::_tokenizeChecksum(std::string &inputString) {
+  // std::bitset converts a string to a bitset directly in its constructor
   std::bitset<17> checksum(inputString);
   _checksum = checksum;
   return true;
@@ -115,6 +117,9 @@ bool Packet::_tokenizeLengthOfData(std::string &inputString) {
 
 bool Packet::_tokenizeData(std::string &inputString) {
   while (inputString.length() > 0) {
+    // bit magic where a an unsigned long long is pushed back into a string
+    // object. This ull is typecast into a char which accurately represents the
+    // data
     _data.push_back(std::stoull(inputString.substr(0, 8), nullptr, 2));
     inputString = inputString.erase(0, 8);
   }
@@ -122,10 +127,12 @@ bool Packet::_tokenizeData(std::string &inputString) {
 }
 
 void Packet::_computeChecksum() {
+  // Creating a copy to save the original packet
   std::string checksumData = _rawPacket;
+
+  // Convert the string to a bitset
   int checksumDataLength = checksumData.length(), bitsLength = 0;
   std::list<std::bitset<17>> bits;
-
   while (bitsLength < checksumDataLength) {
     std::bitset<17> checksumPart(checksumData.substr(0, 16));
     if (bitsLength == 80) {
@@ -138,22 +145,38 @@ void Packet::_computeChecksum() {
 
   std::bitset<17> checksum;
   unsigned long long holder = 0;
+
+  // a ull to be used to check if a carry was done
   unsigned long long checker = std::bitset<17>("10000000000000000").to_ullong();
 
   for (auto &bit : bits) {
+
+    // holder is an ull that handles the addition of the current calculation of
+    // the checksum and the current 2bytes that are being added
     holder = checksum.to_ullong() + bit.to_ullong();
+
+    // checks if a carry was done through a bitwise and
     if (holder & checker) {
+
+      // if carry was done, remove the carry and add 1
       holder -= checker;
       holder += 1;
     }
 
+    // Convert ull back to bitset and set checksum to be the new computed
+    // checksum
     std::bitset<17> newChecksum(holder);
     checksum = newChecksum;
   }
 
+  // get the one's complement and set the most significant bit to 0 as the most
+  // siginificant bit, the 17th bit is not part of the checksum, it is there for
+  // carry purposes and should not affect the final computed checksum
   checksum.flip();
   checksum[16] = 0;
 
+  // Saves the value if the computed checksum is the same as the checksum in the
+  // packet
   _isChecksumPassing = checksum == _checksum;
 }
 

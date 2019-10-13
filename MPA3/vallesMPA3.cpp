@@ -29,7 +29,8 @@ void readFile(std::ifstream &input, std::list<Poem> &poems) {
 
     while (getline(input, lines)) {
 
-      // Deleting carriage return to fix segfault error
+      // Deleting carriage return to fix segfault error when running the code on
+      // unix machines with dos input
       lines.erase(std::remove(lines.begin(), lines.end(), '\r'), lines.end());
 
       // Creating temp packet and flag
