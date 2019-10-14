@@ -43,7 +43,7 @@ public:
   std::string destinationAddress() const;
   int sequenceNumber() const;
 
-  void print() const;
+  std::string data() const;
 };
 
 #endif

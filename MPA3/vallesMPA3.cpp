@@ -8,14 +8,37 @@
 void readFile(std::ifstream &, std::list<Poem> &);
 
 int main() {
+  // Open file
   std::string fileName;
   std::cin >> fileName;
   std::ifstream input(fileName);
+
+  // Create the list of poems
   std::list<Poem> poems;
+
+  // Reads the file and stores the data in packets
   readFile(input, poems);
-  for (auto &i : poems) {
-    i.print();
+
+  // Create Output File
+  std::ofstream output("poems.in");
+  if (output.is_open()) {
+    for (auto it = poems.begin(); it != poems.end(); it++) {
+
+      // Prints to file
+      it->print(output);
+
+      // Create separator
+      if (std::next(it) != poems.end()) {
+        output << "---------------------------------------------------------"
+                  "-----------------------"
+               << std::endl
+               << std::endl;
+      }
+    }
   }
+
+  input.close();
+  output.close();
 
   return 0;
 }

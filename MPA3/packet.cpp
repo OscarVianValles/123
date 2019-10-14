@@ -211,10 +211,10 @@ std::string Packet::destinationAddress() const { return _destinationAddress; }
 
 int Packet::sequenceNumber() const { return _sequenceNumber; }
 
-void Packet::print() const {
+std::string Packet::data() const {
   if (!_isChecksumPassing) {
-    std::cout << "[line corrupted]" << std::endl;
+    return "[line corrupted]";
   } else {
-    std::cout << _data << std::endl;
+    return _data;
   }
 }

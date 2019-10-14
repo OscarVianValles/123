@@ -3,6 +3,7 @@
 
 #include "packet.hpp"
 #include <cmath>
+#include <fstream>
 #include <list>
 #include <string>
 
@@ -18,7 +19,7 @@ private:
 public:
   Poem(Packet);
   void append(Packet &);
-  void print();
+  void print(std::ofstream &);
   bool isSame(const Packet &packet);
 };
 

@@ -37,56 +37,49 @@ void Poem::append(Packet &inputPacket) {
   _packets.push_back(inputPacket);
 }
 
-void Poem::print() {
+void Poem::print(std::ofstream &output) {
 
   // Sort and remove duplicates before printing
   _tidy();
 
-  // Delete last packet. Usually is garbage data
-  _packets.pop_back();
-
-  int expectedSequence = 0;
+  unsigned int expectedSequence = 0;
   for (auto &packet : _packets) {
 
     // Hold sequenceNumber so that the function will not be called twice
     int actualSequence = packet.sequenceNumber();
+    unsigned int absActualSequence = std::abs(actualSequence);
 
     // checks if the expected sequence number is the same as the actual sequence
-    // number. if it isn't then it prints the special lines
-    if (std::abs(actualSequence) != expectedSequence) {
+    // number. if it isn't then it prints the special lines and loops until the
+    // expectedSequence is the same as the actual sequence
+    while (absActualSequence != expectedSequence) {
       if (expectedSequence == 0) {
-        std::cout << "[title missing]" << std::endl;
-        std::cout << _sourceAddress << "/" << _destinationAddress << std::endl;
+        output << "[title missing]" << std::endl;
+        output << _sourceAddress << "/" << _destinationAddress << std::endl;
       } else {
-        std::cout << "[line missing]" << std::endl;
+        output << "[line missing]" << std::endl;
       }
 
       // Increment the expected sequence because the expected sequence has
       // already been determined that it does not exist
       expectedSequence++;
-    } else {
-      packet.print();
     }
+
+    output << packet.data() << std::endl;
 
     // If it is the first in the list then it is the title. The following line
     // needs to be the source address and destination address
     if (expectedSequence == 0) {
-      std::cout << _sourceAddress << "/" << _destinationAddress << std::endl;
+      output << _sourceAddress << "/" << _destinationAddress << std::endl;
     }
 
+    // If a negative sequence number is found then the peom has ended
     if (actualSequence < 0) {
       break;
     }
 
     expectedSequence++;
   }
-
-  // Print separator
-  std::cout << std::endl
-            << "---------------------------------------------------------------"
-               "-----------------"
-            << std::endl
-            << std::endl;
 }
 
 // Receives a packet to compare if the packet is part of the current poem
