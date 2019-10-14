@@ -13,7 +13,7 @@ private:
   std::string _rawPacket;
   std::string _sourceAddress;
   std::string _destinationAddress;
-  unsigned int _sequenceNumber;
+  int _sequenceNumber;
   std::bitset<17> _checksum;
   unsigned int _lengthOfData;
   std::string _data;
@@ -32,6 +32,8 @@ private:
   // Compute Checksum
   void _computeChecksum();
 
+  std::string _twosComplement(std::string &);
+
 public:
   // Constructors
   Packet(const std::string &);
@@ -39,7 +41,7 @@ public:
   // Getters
   std::string sourceAddress() const;
   std::string destinationAddress() const;
-  unsigned int sequenceNumber() const;
+  int sequenceNumber() const;
 
   void print() const;
 };

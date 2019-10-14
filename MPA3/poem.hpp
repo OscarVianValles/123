@@ -2,6 +2,7 @@
 #define MPA3_POEM
 
 #include "packet.hpp"
+#include <cmath>
 #include <list>
 #include <string>
 

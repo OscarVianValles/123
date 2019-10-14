@@ -99,8 +99,32 @@ bool Packet::_tokenizeAddress(const bool &isSource, std::string &inputString) {
 }
 
 bool Packet::_tokenizeSequenceNumber(std::string &inputString) {
-  _sequenceNumber = std::stoll(inputString, nullptr, 2);
+  _sequenceNumber = std::stoi(_twosComplement(inputString), nullptr, 2);
   return true;
+}
+
+std::string Packet::_twosComplement(std::string &inputString) {
+  if (inputString[0] == '0') {
+    return inputString;
+  } else {
+    auto tempString = inputString;
+    int lastOne = tempString.length() - 1;
+    for (; lastOne >= 0; lastOne--) {
+      if (tempString[lastOne] == '1') {
+        break;
+      }
+    }
+
+    for (int i = 0; i < lastOne; i++) {
+      if (tempString[i] == '0') {
+        tempString[i] = '1';
+      } else {
+        tempString[i] = '0';
+      }
+    }
+
+    return "-" + tempString;
+  }
 }
 
 bool Packet::_tokenizeChecksum(std::string &inputString) {
@@ -185,7 +209,7 @@ std::string Packet::sourceAddress() const { return _sourceAddress; }
 
 std::string Packet::destinationAddress() const { return _destinationAddress; }
 
-unsigned int Packet::sequenceNumber() const { return _sequenceNumber; }
+int Packet::sequenceNumber() const { return _sequenceNumber; }
 
 void Packet::print() const {
   if (!_isChecksumPassing) {

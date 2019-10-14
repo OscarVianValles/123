@@ -2,7 +2,7 @@
 
 // Binary predicate for list::sort
 bool packetCompare(const Packet &first, const Packet &second) {
-  return first.sequenceNumber() < second.sequenceNumber();
+  return std::abs(first.sequenceNumber()) < std::abs(second.sequenceNumber());
 }
 
 // Binary predicate for list::unique
@@ -45,12 +45,15 @@ void Poem::print() {
   // Delete last packet. Usually is garbage data
   _packets.pop_back();
 
-  unsigned int expectedSequence = 0;
+  int expectedSequence = 0;
   for (auto &packet : _packets) {
+
+    // Hold sequenceNumber so that the function will not be called twice
+    int actualSequence = packet.sequenceNumber();
 
     // checks if the expected sequence number is the same as the actual sequence
     // number. if it isn't then it prints the special lines
-    if (packet.sequenceNumber() != expectedSequence) {
+    if (std::abs(actualSequence) != expectedSequence) {
       if (expectedSequence == 0) {
         std::cout << "[title missing]" << std::endl;
         std::cout << _sourceAddress << "/" << _destinationAddress << std::endl;
@@ -69,6 +72,10 @@ void Poem::print() {
     // needs to be the source address and destination address
     if (expectedSequence == 0) {
       std::cout << _sourceAddress << "/" << _destinationAddress << std::endl;
+    }
+
+    if (actualSequence < 0) {
+      break;
     }
 
     expectedSequence++;
