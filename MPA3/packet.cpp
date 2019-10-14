@@ -80,11 +80,11 @@ bool Packet::_tokenizeAddress(const bool &isSource, std::string &inputString) {
 
   for (int i = 0; i < 4; i++) {
 
-    // std::stoull converts a string to an unsigned long long. It accepts the
+    // std::stoll converts a string to an unsigned long long. It accepts the
     // string, a pointer to the next position after converting, which I do not
     // use, and the base to convert from. This is then converted to a a string
     addressRef.append(
-        std::to_string(std::stoull(inputString.substr(0, 8), nullptr, 2)));
+        std::to_string(std::stoll(inputString.substr(0, 8), nullptr, 2)));
 
     // Deletes part of the input string that was already tokenized
     inputString.erase(0, 8);
@@ -99,7 +99,7 @@ bool Packet::_tokenizeAddress(const bool &isSource, std::string &inputString) {
 }
 
 bool Packet::_tokenizeSequenceNumber(std::string &inputString) {
-  _sequenceNumber = std::stoull(inputString, nullptr, 2);
+  _sequenceNumber = std::stoll(inputString, nullptr, 2);
   return true;
 }
 
@@ -111,7 +111,7 @@ bool Packet::_tokenizeChecksum(std::string &inputString) {
 }
 
 bool Packet::_tokenizeLengthOfData(std::string &inputString) {
-  _lengthOfData = std::stoull(inputString, nullptr, 2);
+  _lengthOfData = std::stoll(inputString, nullptr, 2);
   return true;
 }
 
@@ -120,7 +120,7 @@ bool Packet::_tokenizeData(std::string &inputString) {
     // bit magic where a an unsigned long long is pushed back into a string
     // object. This ull is typecast into a char which accurately represents the
     // data
-    _data.push_back(std::stoull(inputString.substr(0, 8), nullptr, 2));
+    _data.push_back(std::stoll(inputString.substr(0, 8), nullptr, 2));
     inputString = inputString.erase(0, 8);
   }
   return true;
