@@ -1,6 +1,7 @@
 #include <fstream>
 #include <iostream>
 
+#include "agenda.hpp"
 #include "coordinates.hpp"
 #include "maze.hpp"
 
@@ -9,5 +10,6 @@ int main() {
   std::string input = "########...#o##*#...########";
   Maze a(input, Coordinates(7, 4));
   std::cout << a.stringRepresentation() << std::endl;
+
   return 0;
 }

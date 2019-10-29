@@ -10,6 +10,8 @@ CellType getCellTypeRepresentation(char x) {
     return CellType::Source;
   case '*':
     return CellType::Destination;
+  case 'x':
+    return CellType::Visited;
   default:
     return CellType::Wall;
   }
@@ -25,6 +27,8 @@ char getCharRepresentation(CellType c) {
     return 'o';
   case CellType::Destination:
     return '*';
+  case CellType::Visited:
+    return 'x';
   default:
     return '#';
   }
