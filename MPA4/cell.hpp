@@ -1,11 +1,8 @@
 #ifndef MPA4_CELL
 #define MPA4_CELL
 
-enum class CellType { Wall, Open, Source, Destination };
-
-struct Coordinates {
-  int x, y;
-};
+#include "celltype.hpp"
+#include "coordinates.hpp"
 
 class Cell {
 private:

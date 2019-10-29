@@ -7,10 +7,8 @@ Cell::Cell() {
   __visited = false;
 }
 
-Cell::Cell(CellType t, int x, int y, bool visited) {
+Cell::Cell(CellType t, int x, int y, bool visited) : __location(x, y) {
   __type = t;
-  __location.x = x;
-  __location.y = y;
   __visited = visited;
 }
 
