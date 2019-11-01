@@ -5,20 +5,22 @@
 #include "coordinates.hpp"
 #include "maze.hpp"
 #include <stack>
+#include <string>
 
 template <class T> class MazeSolver {
 private:
   Agenda<T> __a;
   Coordinates __currentLocation;
   Maze *__m;
-  std::stack<Cell> __history;
+  std::stack<Coordinates> __history;
 
 public:
   MazeSolver(Maze &);
   ~MazeSolver();
+
   void solve();
-  void printSolution();
-  Maze *solution();
+
+  std::string solution();
 };
 
 #endif

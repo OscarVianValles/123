@@ -13,11 +13,11 @@ int main() {
   Maze a(input, Coordinates(7, 4));
   MazeSolver<std::stack<Cell>> b(a);
   b.solve();
-  b.printSolution();
+  std::cout << b.solution() << std::endl;
 
   MazeSolver<std::queue<Cell>> c(a);
   c.solve();
-  c.printSolution();
+  std::cout << c.solution() << std::endl;
 
   return 0;
 }
