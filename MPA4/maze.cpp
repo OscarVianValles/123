@@ -11,6 +11,12 @@ Maze::Maze(std::string input, Coordinates d) {
   __tokenize(input);
 }
 
+Maze::Maze(const Maze &input) {
+  __dimensions = input.dimensions();
+  __allocateMem();
+  __tokenize(input.stringRepresentation(false));
+}
+
 Maze::~Maze() {
   for (int i = 0; i < __dimensions.y; i++) {
     delete[] __maze[i];
@@ -40,14 +46,19 @@ void Maze::__tokenize(std::string input) {
   }
 }
 
-std::string Maze::stringRepresentation() {
+// Builders
+Coordinates Maze::dimensions() const { return __dimensions; }
+
+std::string Maze::stringRepresentation(bool withNewline) const {
   std::string maze;
   for (int i = 0; i < __dimensions.y; i++) {
     for (int j = 0; j < __dimensions.x; j++) {
       maze += (getCharRepresentation(__maze[i][j].type()));
     }
 
-    maze += '\n';
+    if (withNewline) {
+      maze += '\n';
+    }
   }
   return maze;
 }

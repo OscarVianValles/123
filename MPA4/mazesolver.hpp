@@ -3,17 +3,18 @@
 
 #include "agenda.hpp"
 #include "maze.hpp"
+#include <string>
 
 template <class T> class MazeSolver {
 private:
-  Agenda<T> *a;
-  Maze *m;
+  Agenda<T> __a;
+  Maze *__m;
 
 public:
-  MazeSolver(Maze);
+  MazeSolver(Maze &);
   ~MazeSolver();
   void solve();
-  void writeSolution();
+  Maze *solution();
 };
 
 #endif

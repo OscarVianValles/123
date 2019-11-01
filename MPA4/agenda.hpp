@@ -9,7 +9,6 @@
 template <class T> class Agenda {
 private:
   T *__adt;
-  int __type;
 
 public:
   Agenda();
@@ -18,6 +17,6 @@ public:
   bool remove();
   bool isEmpty();
   int size();
-  Cell peek();
+  Cell latest();
 };
 #endif

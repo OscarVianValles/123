@@ -14,10 +14,14 @@ private:
   void __allocateMem();
 
 public:
+  Maze();
   Maze(std::string, int, int);
   Maze(std::string, Coordinates);
+  Maze(const Maze &);
   ~Maze();
-  std::string stringRepresentation();
+
+  Coordinates dimensions() const;
+  std::string stringRepresentation(bool) const;
 };
 
 #endif
