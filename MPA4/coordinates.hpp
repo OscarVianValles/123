@@ -13,6 +13,8 @@ struct Coordinates {
     x = a;
     y = b;
   }
+
+  bool operator<(Coordinates b) { return x < b.x && y < b.y; }
 };
 
 #endif

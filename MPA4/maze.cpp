@@ -46,6 +46,8 @@ void Maze::__tokenize(std::string input) {
   }
 }
 
+void Maze::visit(Coordinates c) { __maze[c.y][c.x].visit(); }
+
 // Builders
 Coordinates Maze::dimensions() const { return __dimensions; }
 
@@ -61,4 +63,19 @@ std::string Maze::stringRepresentation(bool withNewline) const {
     }
   }
   return maze;
+}
+
+Coordinates Maze::source() const {
+  for (int i = 0; i < __dimensions.y; i++) {
+    for (int j = 0; j < __dimensions.x; j++) {
+      if (__maze[i][j].type() == CellType::Source) {
+        return Coordinates(j, i);
+      }
+    }
+  }
+  return Coordinates(-1, -1);
+}
+
+Cell Maze::at(Coordinates c) const {
+  return c < __dimensions ? __maze[c.y][c.x] : Cell();
 }

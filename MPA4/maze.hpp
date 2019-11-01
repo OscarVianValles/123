@@ -20,8 +20,12 @@ public:
   Maze(const Maze &);
   ~Maze();
 
+  void visit(Coordinates);
+
   Coordinates dimensions() const;
   std::string stringRepresentation(bool) const;
+  Coordinates source() const;
+  Cell at(Coordinates) const;
 };
 
 #endif

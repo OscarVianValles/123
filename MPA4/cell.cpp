@@ -18,6 +18,8 @@ Cell::Cell(CellType t, Coordinates l, bool visited) {
   __visited = visited;
 }
 
+void Cell::visit() { __type = CellType::Visited; }
+
 CellType Cell::type() { return __type; }
 
 Coordinates Cell::location() { return __location; }
