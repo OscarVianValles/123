@@ -12,22 +12,25 @@ void readFile(std::ifstream &, std::queue<Maze> &);
 
 int main() {
   // Open File and create mazes
-  std::string fileName;
-  std::cin >> fileName;
-  std::ifstream input(fileName);
+  // std::string fileName;
+  // std::cin >> fileName;
+  std::ifstream input("maze.in");
   std::queue<Maze> mazes;
   readFile(input, mazes);
 
-  std::cout << mazes.size() << std::endl;
+  // Create output file
 
+  std::ofstream output("maze.out");
+
+  // Solve each maze and write to file
   while (!mazes.empty()) {
     MazeSolver<std::queue<Cell>> a(mazes.front());
     a.solve();
-    std::cout << a.solution() << std::endl;
+    output << a.solution() << std::endl;
 
     MazeSolver<std::stack<Cell>> b(mazes.front());
     b.solve();
-    std::cout << b.solution() << std::endl;
+    output << b.solution() << std::endl;
     mazes.pop();
   }
   return 0;
