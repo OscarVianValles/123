@@ -31,8 +31,6 @@ char getCharRepresentation(CellType c) {
     return '*';
   case CellType::Visited:
     return 'x';
-  // case CellType::Deadend:
-  //  return '&';
   case CellType::Deadend:
     return '.';
   default:

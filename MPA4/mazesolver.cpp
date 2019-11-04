@@ -13,7 +13,6 @@ template <class T> void MazeSolver<T>::solve() {
 
   bool isSolved = false, openIsFound = false;
   while (!isSolved) {
-    // Resetting flags
     openIsFound = false;
 
     // Creating next cells to be checked
@@ -70,7 +69,15 @@ template <class T> void MazeSolver<T>::solve() {
       __m->close(currentLocation);
 
       // Clear current location from history
-      __history.pop();
+      // if the size of the history is greater than 1, then there are still
+      // previous cells to go back to. If it less than 1, then that means we
+      // have gone back to the source cell, meaning that there is no solution to
+      // the maze
+      if (__history.size() > 1) {
+        __history.pop();
+      } else {
+        return;
+      }
 
       // Set current location to be the cell before the deadend
       currentLocation = __history.top();

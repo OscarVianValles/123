@@ -20,7 +20,9 @@ Cell::Cell(CellType t, Coordinates l, bool visited) {
 
 void Cell::visit() { __type = CellType::Visited; }
 
-void Cell::close() { __type = CellType::Deadend; }
+void Cell::close() {
+  __type = __type != CellType::Source ? CellType::Deadend : CellType::Source;
+}
 
 CellType Cell::type() { return __type; }
 
