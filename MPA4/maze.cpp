@@ -56,6 +56,8 @@ void Maze::__tokenize(std::string input) {
 // Visits the cell at coordinate c
 void Maze::visit(Coordinates c) { __maze[c.y][c.x].visit(); }
 
+void Maze::close(Coordinates c) { __maze[c.y][c.x].close(); }
+
 // Builders
 Coordinates Maze::dimensions() const { return __dimensions; }
 

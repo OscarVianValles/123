@@ -1,15 +1,16 @@
 #include "mazesolver.hpp"
 #include <iostream>
 
-template <class T> MazeSolver<T>::MazeSolver(Maze &m) {
-  __m = new Maze(m);
-  __currentLocation = __m->source();
-}
+template <class T> MazeSolver<T>::MazeSolver(Maze &m) { __m = new Maze(m); }
 
 template <class T> MazeSolver<T>::~MazeSolver() { delete __m; }
 
 // Solves the maze
 template <class T> void MazeSolver<T>::solve() {
+
+  Coordinates previousLocation,
+      currentLocation = previousLocation = __m->source();
+
   bool isSolved = false, openIsFound = false;
   while (!isSolved) {
     // Resetting flags
@@ -18,17 +19,18 @@ template <class T> void MazeSolver<T>::solve() {
     // Creating next cells to be checked
 
     // Left
-    __a.add(__m->at(Coordinates(__currentLocation.x - 1, __currentLocation.y)));
+    __a.add(__m->at(Coordinates(currentLocation.x - 1, currentLocation.y)));
 
     // Up
-    __a.add(__m->at(Coordinates(__currentLocation.x, __currentLocation.y - 1)));
+    __a.add(__m->at(Coordinates(currentLocation.x, currentLocation.y - 1)));
 
     // Right
-    __a.add(__m->at(Coordinates(__currentLocation.x + 1, __currentLocation.y)));
+    __a.add(__m->at(Coordinates(currentLocation.x + 1, currentLocation.y)));
 
     // Down
-    __a.add(__m->at(Coordinates(__currentLocation.x, __currentLocation.y + 1)));
+    __a.add(__m->at(Coordinates(currentLocation.x, currentLocation.y + 1)));
 
+    previousLocation = currentLocation;
     // Finding first open space and clearing agenda
     while (!__a.isEmpty()) {
 
@@ -36,10 +38,13 @@ template <class T> void MazeSolver<T>::solve() {
       if (__a.latest().type() == CellType::Open && !openIsFound) {
 
         // Set current location based on cell that is open
-        __currentLocation = __a.latest().location();
+        currentLocation = __a.latest().location();
 
         // Visit the open cell
-        __m->visit(__currentLocation);
+        __m->visit(currentLocation);
+
+        // Add the current cell to the stack
+        __history.push(currentLocation);
 
         // Set flag
         openIsFound = true;
@@ -55,6 +60,20 @@ template <class T> void MazeSolver<T>::solve() {
 
       // Removes the current cell being checked
       __a.remove();
+    }
+
+    // If previous location is the same as current location then that means the
+    // the current location is a deadend.
+    if (previousLocation == currentLocation && !isSolved) {
+
+      // Set current location as a deadend
+      __m->close(currentLocation);
+
+      // Clear current location from history
+      __history.pop();
+
+      // Set current location to be the cell before the deadend
+      currentLocation = __history.top();
     }
   }
 }

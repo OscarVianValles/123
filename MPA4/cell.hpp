@@ -16,6 +16,7 @@ public:
   Cell(CellType, Coordinates, bool);
 
   void visit();
+  void close();
 
   CellType type();
   Coordinates location();

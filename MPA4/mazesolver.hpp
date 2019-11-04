@@ -10,7 +10,6 @@
 template <class T> class MazeSolver {
 private:
   Agenda<T> __a;
-  Coordinates __currentLocation;
   Maze *__m;
   std::stack<Coordinates> __history;
 

@@ -21,6 +21,7 @@ public:
   ~Maze();
 
   void visit(Coordinates);
+  void close(Coordinates);
 
   Coordinates dimensions() const;
   std::string stringRepresentation(bool) const;

@@ -15,6 +15,7 @@ struct Coordinates {
   }
 
   bool operator<(Coordinates b) { return x < b.x && y < b.y; }
+  bool operator==(Coordinates b) { return x == b.x && y == b.y; }
 };
 
 #endif
