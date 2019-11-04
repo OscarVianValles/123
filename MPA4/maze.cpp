@@ -14,7 +14,7 @@ Maze::Maze(std::string input, Coordinates d) {
 Maze::Maze(const Maze &input) {
   __dimensions = input.dimensions();
   __allocateMem();
-  __tokenize(input.stringRepresentation(false));
+  __tokenize(input.stringRepresentation());
 }
 
 Maze::~Maze() {
@@ -36,8 +36,11 @@ void Maze::__allocateMem() {
 }
 
 // Tokenizes input string to a maze.
-// TODO: Refactor to accept strings with newlines
 void Maze::__tokenize(std::string input) {
+
+  // Remove newlines
+  input.erase(std::remove(input.begin(), input.end(), '\n'), input.end());
+
   for (int i = 0; i < __dimensions.y; i++) {
 
     // Loops through the first $__dimensions.x characters in the string and
@@ -61,18 +64,15 @@ void Maze::close(Coordinates c) { __maze[c.y][c.x].close(); }
 // Builders
 Coordinates Maze::dimensions() const { return __dimensions; }
 
-// Creates a string representation based on the cells. Can be configured to not
-// include newlines, which is used in the copy constructor
-std::string Maze::stringRepresentation(bool withNewline) const {
+// Creates a string representation based on the cells.
+std::string Maze::stringRepresentation() const {
   std::string maze;
   for (int i = 0; i < __dimensions.y; i++) {
     for (int j = 0; j < __dimensions.x; j++) {
       maze += (getCharRepresentation(__maze[i][j].type()));
     }
 
-    if (withNewline) {
-      maze += '\n';
-    }
+    maze += '\n';
   }
   return maze;
 }

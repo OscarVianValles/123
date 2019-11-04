@@ -3,6 +3,7 @@
 
 #include "cell.hpp"
 #include "coordinates.hpp"
+#include <algorithm>
 #include <string>
 
 class Maze {
@@ -24,7 +25,7 @@ public:
   void close(Coordinates);
 
   Coordinates dimensions() const;
-  std::string stringRepresentation(bool) const;
+  std::string stringRepresentation() const;
   Coordinates source() const;
   Cell at(Coordinates) const;
 };

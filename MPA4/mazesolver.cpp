@@ -86,7 +86,7 @@ template <class T> void MazeSolver<T>::solve() {
 }
 
 template <class T> std::string MazeSolver<T>::solution() {
-  return __m->stringRepresentation(true);
+  return __m->stringRepresentation();
 }
 
 // To compile, the compiler must know which templates are needed so that the
