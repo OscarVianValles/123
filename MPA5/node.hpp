@@ -5,7 +5,7 @@
 #include <list>
 class Node {
 public:
-  Descriptor d;
+  Descriptor content;
   std::list<Node *> children;
 
   Node(bool, std::string);
