@@ -14,6 +14,7 @@ private:
 
 public:
   // Constructor
+  Descriptor(bool, std::string);
   Descriptor(bool, std::string, std::string);
 
   // Builders
