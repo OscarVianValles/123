@@ -19,6 +19,7 @@ public:
 
   // Builders
   bool isFile();
+  bool isFolder();
   time_t created();
   time_t modfied();
   std::string name();

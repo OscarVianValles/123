@@ -17,6 +17,8 @@ Descriptor::Descriptor(bool isFile, std::string name, std::string fileContent) {
 
 bool Descriptor::isFile() { return __isFile; }
 
+bool Descriptor::isFolder() { return !__isFile; }
+
 time_t Descriptor::created() { return __created; }
 
 time_t Descriptor::modfied() { return __modified; }

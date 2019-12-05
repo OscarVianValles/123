@@ -1,17 +1,19 @@
+#include "commands.hpp"
 #include "fileTree.hpp"
 
 int main() {
   FileTree *a = new FileTree();
-  Node *b = new Node(true, "asd");
-  Node *d = new Node(true, "adsf");
-  Node *e = new Node(true, "was");
-  a->root();
+  Node *file = new Node(true, "file");
+
+  a->root()->addChild(file);
   std::list<std::string> params;
-  Command *c = new ls(params);
-  a->insert(b);
-  a->insert(d);
-  a->insert(e);
-  a->execute(c);
+  params.push_back("test");
+  Command *c = new mkdir(params);
+  c->execute(*a);
+
+  Command *s = new ls(params);
+  s->execute(*a);
   delete c;
+  delete s;
   delete a;
 }

@@ -72,16 +72,17 @@ bool FileTree::insert(Node *x) { return insert(__current, x); }
 
 bool FileTree::insert(Node *to, Node *x) { return to->addChild(x); }
 
-bool FileTree::remove(Node *x) { return remove(__current, x); }
+bool FileTree::remove(Node *x) {
+  if (x) {
+    Node *to = x->parent;
+    if (x == __root) {
+      return false;
+    } else if (x == __current) {
+      __current = __current->parent;
+    }
 
-bool FileTree::remove(Node *to, Node *x) {
-  if (x == __root) {
+    return to->removeChild(x);
+  } else {
     return false;
-  } else if (x == __current) {
-    __current = __current->parent;
   }
-
-  return to->removeChild(x);
 }
-
-void FileTree::execute(Command *x) { x->execute(*this); }

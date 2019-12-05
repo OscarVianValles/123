@@ -1,9 +1,6 @@
 #ifndef MPA5_COMMAND
 #define MPA5_COMMAND
 
-// Forward declare FileTree to break circular dependencies
-class FileTree;
-
 #include "../fileTree.hpp"
 #include "../node.hpp"
 #include <list>

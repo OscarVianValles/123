@@ -3,5 +3,6 @@
 
 #include "commands/command.hpp"
 #include "commands/ls.hpp"
+#include "commands/mkdir.hpp"
 
 #endif
