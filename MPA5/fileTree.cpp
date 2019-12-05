@@ -84,4 +84,4 @@ bool FileTree::remove(Node *to, Node *x) {
   return to->removeChild(x);
 }
 
-void FileTree::execute(Command &x) { x.execute(*this); }
+void FileTree::execute(Command *x) { x->execute(*this); }

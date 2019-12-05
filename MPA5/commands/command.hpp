@@ -14,7 +14,8 @@ protected:
   std::list<std::string> params;
 
 public:
-  virtual bool execute(const FileTree &) = 0;
+  virtual ~Command(){};
+  virtual bool execute(FileTree &) = 0;
 };
 
 #endif

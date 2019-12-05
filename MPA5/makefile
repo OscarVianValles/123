@@ -2,7 +2,7 @@ CC=g++
 CFLAGS=-c -g -Wall -fsanitize=address -std=c++11
 LDFLAGS= -fsanitize=address
 LIBFLAGS=
-SOURCES=$(wildcard *.cpp)
+SOURCES=$(wildcard *.cpp) $(wildcard */*.cpp)
 OBJECTS=$(SOURCES:.cpp=.o)
 EXECUTABLE=a
 BINDIR=/usr/bin
@@ -16,4 +16,4 @@ $(EXECUTABLE): $(OBJECTS)
 	$(CC) $(CFLAGS) $< -o $@ $(LIBFLAGS)
 
 clean:
-	rm *.o $(EXECUTABLE)
+	rm *.o */*.o $(EXECUTABLE)

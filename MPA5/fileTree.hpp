@@ -26,6 +26,6 @@ public:
   bool remove(Node *);
   bool remove(Node *, Node *);
 
-  void execute(Command &);
+  void execute(Command *);
 };
 #endif
