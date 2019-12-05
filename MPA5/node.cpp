@@ -21,6 +21,7 @@ bool Node::addChild(Node *x) {
   if (content.isFile()) {
     return false;
   } else {
+    x->parent = this;
     if (x->content.isFile()) {
       children.push_back(x);
     } else {
