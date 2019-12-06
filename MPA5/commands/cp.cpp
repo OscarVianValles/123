@@ -24,9 +24,6 @@ bool cp::execute(FileTree &t) {
   std::list<std::string> sourceTokens = tokenize(params.front(), '/');
   std::list<std::string> distTokens = tokenize(params.back(), '/');
 
-  // Handle if "cp foo/ bar/baz/", i.e. if the last location has an extra /, if
-  // the copied file is a directory"
-
   // Get current file
   Node *currentFile;
   // If last token is "", then that means that the last character was a '/'
@@ -38,6 +35,8 @@ bool cp::execute(FileTree &t) {
     currentFile = t.search(sourceTokens, false);
   }
 
+  // Handle if "cp foo/ bar/baz/", i.e. if the last location has an extra /, if
+  // the copied file is a directory"
   if (distTokens.back() == "") {
     if (currentFile->content.isFolder()) {
       distTokens.pop_back();
