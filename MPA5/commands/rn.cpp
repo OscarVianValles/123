@@ -16,7 +16,10 @@ bool rn::execute(FileTree &t) {
     return false;
   }
 
+  // Search for file
   Node *currentFile = t.search(params.front(), true);
+
+  // If file is found, rename file, else throw error message
   if (currentFile) {
     currentFile->content.changeName(params.back());
   } else {
