@@ -15,8 +15,22 @@ bool touch::execute(FileTree &t) {
   if (currentFile) {
     currentFile->content.emptyFileContent();
   } else {
-    Node *newFile = new Node(true, params.front());
-    t.insert(newFile);
+    std::list<std::string> tokens = tokenize(params.front(), '/');
+    std::string name = tokens.back();
+    tokens.pop_back();
+
+    Node *newFile = new Node(true, name);
+    if (tokens.size() >= 1) {
+      Node *currDir = t.search(tokens, false);
+      if (!currDir) {
+        std::cout << "touch: parent directory not found" << std::endl;
+        return false;
+      } else {
+        t.insert(currDir, newFile);
+      }
+    } else {
+      t.insert(newFile);
+    }
   }
 
   append a(params);

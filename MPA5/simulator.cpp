@@ -24,7 +24,6 @@ Simulator::~Simulator() {
 void Simulator::execute() {
   // Create pointer to commands
   Command *c = nullptr;
-  Command *cnext = nullptr;
 
   while (true) {
     // Print current path
