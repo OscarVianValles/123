@@ -7,14 +7,14 @@
 class FileTree {
 private:
   Node *__root, *__current;
-  Node *__search(Node *, std::string, std::list<std::string>);
+  Node *__search(Node *, std::string, std::list<std::string>, bool);
 
 public:
   FileTree();
   ~FileTree();
 
-  Node *search(std::string);
-  Node *search(std::list<std::string>);
+  Node *search(std::string, bool);
+  Node *search(std::list<std::string>, bool);
 
   Node *root();
   Node *current();

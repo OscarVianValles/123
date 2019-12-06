@@ -11,7 +11,7 @@ FileTree::FileTree() {
 FileTree::~FileTree() { delete __root; }
 
 // Recursively searches through all of the children depending on the string
-Node *FileTree::search(std::string x) {
+Node *FileTree::search(std::string x, bool isFile) {
   // Tokenize input string
   std::list<std::string> tokens = tokenize(x, '/');
 
@@ -20,32 +20,36 @@ Node *FileTree::search(std::string x) {
   std::string initial = tokens.front();
   if (initial == "") {
     tokens.pop_front();
-    return __search(__root, initial, tokens);
+    return __search(__root, initial, tokens, isFile);
   } else {
-    return __search(__current, __current->content.name(), tokens);
+    return __search(__current, __current->content.name(), tokens, isFile);
   }
 }
 
-Node *FileTree::search(std::list<std::string> tokens) {
+Node *FileTree::search(std::list<std::string> tokens, bool isFile) {
   // Get first element of the string to check if the first character was "/"
   // which indicates that it is searching from the root
   std::string initial = tokens.front();
   if (initial == "") {
     tokens.pop_front();
-    return __search(__root, initial, tokens);
+    return __search(__root, initial, tokens, isFile);
   } else {
-    return __search(__current, __current->content.name(), tokens);
+    return __search(__current, __current->content.name(), tokens, isFile);
   }
 }
 
 // Recursive Search
 Node *FileTree::__search(Node *current, std::string searchItem,
-                         std::list<std::string> tokens) {
+                         std::list<std::string> tokens, bool isFile) {
   if (current->content.name() == searchItem) {
     // If tokens is empty, then that means that the last folder has been
     // reached. If not, then search the next child
     if (tokens.empty()) {
-      return current;
+      if (current->content.isFile() == isFile) {
+        return current;
+      } else {
+        return nullptr;
+      }
     } else {
       // Get new search item
       std::string newSearchItem = tokens.front();
@@ -54,7 +58,7 @@ Node *FileTree::__search(Node *current, std::string searchItem,
       Node *returnValue;
       // Searching for new search item in each children
       for (auto &child : current->children) {
-        returnValue = __search(child, newSearchItem, tokens);
+        returnValue = __search(child, newSearchItem, tokens, isFile);
         if (returnValue != nullptr) {
           return returnValue;
         }

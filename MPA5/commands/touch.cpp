@@ -11,7 +11,7 @@ bool touch::execute(FileTree &t) {
     return false;
   }
 
-  Node *currentFile = t.search(params.front());
+  Node *currentFile = t.search(params.front(), true);
   if (currentFile) {
     currentFile->content.emptyFileContent();
   } else {
