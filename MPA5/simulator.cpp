@@ -5,7 +5,7 @@ std::string Simulator::currentPath() {
   Node *curr = t->current();
   std::string path;
   while (curr) {
-    path.insert(0, "/" + curr->content.name());
+    path.insert(0, curr->content.name() + "/");
     curr = curr->parent;
   }
 
@@ -24,6 +24,7 @@ Simulator::~Simulator() {
 void Simulator::execute() {
   // Create pointer to commands
   Command *c = nullptr;
+  Command *cnext = nullptr;
 
   while (true) {
     // Print current path
@@ -55,13 +56,17 @@ void Simulator::execute() {
       c = new ls(tokens);
     } else if (inputString == "mkdir") {
       c = new mkdir(tokens);
-    } else if (inputString == "touch") {
+    } else if (inputString == ">") {
       c = new touch(tokens);
+    } else if (inputString == "cd") {
+      c = new cd(tokens);
     }
 
     // If c exists, execute it then deletes it
     if (c) {
-      c->execute(*(t));
+      if (!c->execute(*(t))) {
+        std::cout << "An error has occured" << std::endl;
+      }
       delete c;
       c = nullptr;
     }

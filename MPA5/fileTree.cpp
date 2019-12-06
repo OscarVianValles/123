@@ -91,3 +91,5 @@ bool FileTree::remove(Node *x) {
     return false;
   }
 }
+
+void FileTree::changeCurrent(Node *x) { __current = x; }
