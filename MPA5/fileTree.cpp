@@ -12,7 +12,7 @@ FileTree::~FileTree() { delete __root; }
 // Recursively searches through all of the children depending on the string
 Node *FileTree::search(std::string x) {
   // Tokenize input string
-  std::list<std::string> tokens = tokenize(x);
+  std::list<std::string> tokens = tokenize(x, '/');
 
   // Get first element of the string to check if the first character was "/"
   // which indicates that it is searching from the root
