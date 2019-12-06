@@ -61,6 +61,8 @@ void Simulator::execute() {
       c = new append(tokens);
     } else if (inputString == "cd") {
       c = new cd(tokens);
+    } else if (inputString == "rn") {
+      c = new rn(tokens);
     }
 
     // If c exists, execute it then deletes it
