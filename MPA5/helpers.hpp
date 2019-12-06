@@ -4,6 +4,6 @@
 #include <list>
 #include <sstream>
 #include <string>
-extern std::list<std::string> tokenize(std::string);
+extern std::list<std::string> tokenize(std::string, char);
 
 #endif
