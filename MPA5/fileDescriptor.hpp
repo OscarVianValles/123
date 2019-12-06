@@ -27,6 +27,7 @@ public:
 
   void changeName(std::string);
   void appendFileContent(std::string);
+  void emptyFileContent();
   void modify();
 };
 

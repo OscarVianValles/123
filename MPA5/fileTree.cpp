@@ -1,4 +1,5 @@
 #include "fileTree.hpp"
+#include <iostream>
 
 // Constructor
 FileTree::FileTree() {
@@ -17,8 +18,8 @@ Node *FileTree::search(std::string x) {
   // Get first element of the string to check if the first character was "/"
   // which indicates that it is searching from the root
   std::string initial = tokens.front();
-  tokens.pop_front();
   if (initial == "") {
+    tokens.pop_front();
     return __search(__root, initial, tokens);
   } else {
     return __search(__current, __current->content.name(), tokens);
@@ -29,8 +30,8 @@ Node *FileTree::search(std::list<std::string> tokens) {
   // Get first element of the string to check if the first character was "/"
   // which indicates that it is searching from the root
   std::string initial = tokens.front();
-  tokens.pop_front();
   if (initial == "") {
+    tokens.pop_front();
     return __search(__root, initial, tokens);
   } else {
     return __search(__current, __current->content.name(), tokens);

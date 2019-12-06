@@ -41,4 +41,12 @@ void Descriptor::appendFileContent(std::string x) {
   }
 }
 
+void Descriptor::emptyFileContent() {
+  if (__isFile) {
+    __fileContent.clear();
+  } else {
+    throw 1;
+  }
+}
+
 void Descriptor::modify() { __modified = time(NULL); }

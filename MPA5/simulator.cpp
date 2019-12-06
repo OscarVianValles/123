@@ -55,6 +55,8 @@ void Simulator::execute() {
       c = new ls(tokens);
     } else if (inputString == "mkdir") {
       c = new mkdir(tokens);
+    } else if (inputString == "touch") {
+      c = new touch(tokens);
     }
 
     // If c exists, execute it then deletes it
