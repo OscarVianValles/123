@@ -67,6 +67,10 @@ void Simulator::execute() {
       c = new show(tokens);
     } else if (inputString == "rm") {
       c = new rm(tokens);
+    } else if (inputString == "rmdir") {
+      c = new rmdir(tokens);
+    } else if (inputString == "cp") {
+      c = new cp(tokens);
     }
 
     // If c exists, execute it then deletes it

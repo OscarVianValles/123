@@ -11,6 +11,7 @@ public:
 
   Node(bool, std::string);
   Node(bool, std::string, std::string);
+  Node(const Node &);
 
   ~Node();
 
