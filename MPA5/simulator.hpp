@@ -1,6 +1,7 @@
 #ifndef MPA5_SIMULATOR
 #define MPA5_SIMULATOR
 
+#include "commands.hpp"
 #include "fileTree.hpp"
 #include "helpers.hpp"
 #include <iostream>
