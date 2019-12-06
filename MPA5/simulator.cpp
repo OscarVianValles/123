@@ -58,6 +58,8 @@ void Simulator::execute() {
       c = new mkdir(tokens);
     } else if (inputString == ">") {
       c = new touch(tokens);
+    } else if (inputString == ">>" || inputString == "edit") {
+      c = new append(tokens);
     } else if (inputString == "cd") {
       c = new cd(tokens);
     }

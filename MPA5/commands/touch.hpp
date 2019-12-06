@@ -1,6 +1,7 @@
 #ifndef MPA5_TOUCH
 #define MPA5_TOUCH
 
+#include "append.hpp"
 #include "command.hpp"
 #include <iostream>
 #include <list>

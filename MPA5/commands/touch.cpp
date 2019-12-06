@@ -18,5 +18,8 @@ bool touch::execute(FileTree &t) {
     Node *newFile = new Node(true, params.front());
     t.insert(newFile);
   }
+
+  append a(params);
+  a.execute(t);
   return true;
 }
