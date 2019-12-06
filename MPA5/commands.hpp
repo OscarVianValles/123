@@ -6,6 +6,7 @@
 #include "commands/command.hpp"
 #include "commands/ls.hpp"
 #include "commands/mkdir.hpp"
+#include "commands/rm.hpp"
 #include "commands/rn.hpp"
 #include "commands/show.hpp"
 #include "commands/touch.hpp"

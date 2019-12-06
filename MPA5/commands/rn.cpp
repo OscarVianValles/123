@@ -14,6 +14,9 @@ bool rn::execute(FileTree &t) {
               << std::endl;
 
     return false;
+  } else if (params.size() > 2) {
+    std::cout << "rn: expected 2 arguments, got " << params.size() << std::endl;
+    return false;
   }
 
   // Search for file

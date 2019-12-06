@@ -6,6 +6,7 @@ touch::touch(std::list<std::string> inputParams) { params = inputParams; }
 touch::~touch() {}
 
 bool touch::execute(FileTree &t) {
+  // Handle trivial test cases
   if (params.empty()) {
     std::cout << "touch: missing file operand" << std::endl;
     return false;

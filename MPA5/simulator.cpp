@@ -65,6 +65,8 @@ void Simulator::execute() {
       c = new rn(tokens);
     } else if (inputString == "show") {
       c = new show(tokens);
+    } else if (inputString == "rm") {
+      c = new rm(tokens);
     }
 
     // If c exists, execute it then deletes it
