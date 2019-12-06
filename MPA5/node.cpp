@@ -1,10 +1,14 @@
 #include "node.hpp"
 
 // Constructors
-Node::Node(bool isFile, std::string fileName) : content(isFile, fileName) {}
+Node::Node(bool isFile, std::string fileName) : content(isFile, fileName) {
+  parent = nullptr;
+}
 
 Node::Node(bool isFile, std::string fileName, std::string fileContent)
-    : content(isFile, fileName, fileContent) {}
+    : content(isFile, fileName, fileContent) {
+  parent = nullptr;
+}
 
 // Recursively deletes the content of the node. This will call the first
 // child, will remove it from the list, then call this destructor again, which
