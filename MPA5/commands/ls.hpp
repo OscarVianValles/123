@@ -16,6 +16,7 @@ public:
   ls(std::list<std::string>);
   ~ls();
   bool execute(FileTree &);
+  bool execute(FileTree &, std::ofstream);
 };
 
 #endif

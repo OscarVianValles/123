@@ -10,6 +10,7 @@ public:
   mkdir(std::list<std::string>);
   ~mkdir();
   bool execute(FileTree &);
+  bool execute(FileTree &, std::ofstream);
 };
 
 #endif

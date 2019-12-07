@@ -3,7 +3,7 @@
 
 #include "helpers.hpp"
 #include "node.hpp"
-
+#include <stack>
 class FileTree {
 private:
   Node *__root, *__current;
@@ -16,6 +16,8 @@ public:
   Node *search(std::string, bool);
   Node *search(std::list<std::string>, bool);
 
+  std::stack<Node *> whereis(std::string);
+
   Node *root();
   Node *current();
 
@@ -24,5 +26,7 @@ public:
 
   bool remove(Node *);
   void changeCurrent(Node *);
+
+  std::string nodePath(Node *);
 };
 #endif

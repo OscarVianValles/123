@@ -4,18 +4,20 @@
 #include "commands.hpp"
 #include "fileTree.hpp"
 #include "helpers.hpp"
+#include <fstream>
 #include <iostream>
+
 class Simulator {
 private:
   FileTree *t;
   void __readFile();
   void __writeFile();
-  std::string currentPath();
 
 public:
   Simulator();
   ~Simulator();
   void execute();
+  void executeFromFile();
 };
 
 #endif

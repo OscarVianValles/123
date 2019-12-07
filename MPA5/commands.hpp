@@ -13,5 +13,6 @@
 #include "commands/rn.hpp"
 #include "commands/show.hpp"
 #include "commands/touch.hpp"
+#include "commands/whereis.hpp"
 
 #endif

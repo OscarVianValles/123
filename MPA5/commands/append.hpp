@@ -12,6 +12,7 @@ public:
   append(std::list<std::string>);
   ~append();
   bool execute(FileTree &);
+  bool execute(FileTree &, std::ofstream);
 };
 
 #endif

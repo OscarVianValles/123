@@ -12,6 +12,7 @@ public:
   touch(std::list<std::string>);
   ~touch();
   bool execute(FileTree &);
+  bool execute(FileTree &, std::ofstream);
 };
 
 #endif

@@ -11,6 +11,7 @@ public:
   cd(std::list<std::string>);
   ~cd();
   bool execute(FileTree &);
+  bool execute(FileTree &, std::ofstream);
 };
 
 #endif

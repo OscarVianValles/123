@@ -69,6 +69,24 @@ Node *FileTree::__search(Node *current, std::string searchItem,
   return nullptr;
 }
 
+std::stack<Node *> FileTree::whereis(std::string fileName) {
+  std::stack<Node *> nodes;
+  std::stack<Node *> foundNodes;
+  nodes.push(__current);
+  while (!nodes.empty()) {
+    Node *curr = nodes.top();
+    nodes.pop();
+    for (auto &child : curr->children) {
+      nodes.push(child);
+    }
+    if (curr->content.name() == fileName) {
+      foundNodes.push(curr);
+    }
+  }
+
+  return foundNodes;
+}
+
 Node *FileTree::root() { return __root; }
 
 Node *FileTree::current() { return __current; }
@@ -93,3 +111,14 @@ bool FileTree::remove(Node *x) {
 }
 
 void FileTree::changeCurrent(Node *x) { __current = x; }
+
+std::string FileTree::nodePath(Node *x) {
+  Node *curr = x;
+  std::string path;
+  while (curr) {
+    path.insert(0, curr->content.name() + "/");
+    curr = curr->parent;
+  }
+
+  return path;
+}

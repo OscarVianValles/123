@@ -11,6 +11,7 @@ public:
   rmdir(std::list<std::string>);
   ~rmdir();
   bool execute(FileTree &);
+  bool execute(FileTree &, std::ofstream);
 };
 
 #endif
