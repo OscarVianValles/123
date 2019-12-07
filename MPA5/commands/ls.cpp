@@ -28,7 +28,6 @@ bool ls::execute(FileTree &t) {
         if (possibleRegex[0] == '*' && possibleRegex[1] == '.') {
           possibleRegex = "." + possibleRegex + "$";
         }
-        std::cout << possibleRegex << std::endl;
 
       } catch (std::regex_error &e) {
         std::cout << "ls: cannot access '" + params.front() +
