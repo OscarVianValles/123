@@ -33,7 +33,7 @@ bool rn::execute(FileTree &t) {
   return true;
 }
 
-bool rn::execute(FileTree &t, std::ofstream output) {
+bool rn::execute(FileTree &t, std::ofstream &output) {
   // Handle trivial test cases
   if (params.empty()) {
     output << "rn: missing file operand" << std::endl;

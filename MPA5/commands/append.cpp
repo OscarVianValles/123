@@ -50,7 +50,7 @@ bool append::execute(FileTree &t) {
   return true;
 }
 
-bool append::execute(FileTree &t, std::ofstream output) {
+bool append::execute(FileTree &t, std::ofstream &output) {
   // Trivial test cases first
   if (params.empty()) {
     std::cout << "append: missing file operand" << std::endl;

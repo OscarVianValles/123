@@ -27,7 +27,7 @@ bool rmdir::execute(FileTree &t) {
   return true;
 }
 
-bool rmdir::execute(FileTree &t, std::ofstream output) {
+bool rmdir::execute(FileTree &t, std::ofstream &output) {
   if (params.empty()) {
     output << "rmdir: missing operand" << std::endl;
     return false;

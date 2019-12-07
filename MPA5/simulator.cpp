@@ -12,19 +12,13 @@ Simulator::~Simulator() {
 void Simulator::executeFromFile() {
   // Open file
   std::ifstream infile("mp4.in");
-  std::ofstream outfile("mp4.out");
+  std::ofstream outfile("mp4.out", std::ofstream::out | std::ofstream::trunc);
 
   // Create pointer to commands
   Command *c = nullptr;
 
-  while (true) {
-    // Print current path
-    std::cout << t->nodePath(t->current()) << " > ";
-
-    // Holder string and get input with spaces
-    std::string inputString;
-    std::getline(infile, inputString);
-
+  std::string inputString;
+  while (std::getline(infile, inputString)) {
     // If no input was passed, move to the next iteration
     if (inputString.empty()) {
       continue;
@@ -71,9 +65,7 @@ void Simulator::executeFromFile() {
 
     // If c exists, execute it then deletes it
     if (c) {
-      if (!c->execute(*(t), outfile)) {
-        std::cout << "An error has occured" << std::endl;
-      }
+      !c->execute(*(t), outfile);
       delete c;
       c = nullptr;
     }
@@ -143,9 +135,7 @@ void Simulator::execute() {
 
     // If c exists, execute it then deletes it
     if (c) {
-      if (!c->execute(*(t))) {
-        std::cout << "An error has occured" << std::endl;
-      }
+      c->execute(*(t));
       delete c;
       c = nullptr;
     }

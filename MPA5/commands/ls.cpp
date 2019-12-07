@@ -25,10 +25,8 @@ bool ls::execute(FileTree &t) {
       std::regex pattern(".*");
       try {
         std::string possibleRegex = tokens.back();
-        if (possibleRegex[0] == '*' && possibleRegex[1] == '.') {
-          possibleRegex = "." + possibleRegex + "$";
-        }
-
+        replaceAll(possibleRegex, "*", ".*");
+        pattern = std::regex(possibleRegex);
       } catch (std::regex_error &e) {
         std::cout << "ls: cannot access '" + params.front() +
                          "': No such file or directory"
@@ -56,10 +54,10 @@ bool ls::execute(FileTree &t) {
   return true;
 }
 
-bool ls::execute(FileTree &t, std::ofstream output) {
+bool ls::execute(FileTree &t, std::ofstream &output) {
   if (params.empty()) {
     Node *curr = t.current();
-    __printDirectory(curr);
+    __printDirectoryFile(curr, output);
     return true;
   } else {
     std::list<std::string> tokens = tokenize(params.front(), '/');
@@ -70,7 +68,7 @@ bool ls::execute(FileTree &t, std::ofstream output) {
     // Try searching for directory
     Node *currNode = t.search(tokens, false);
     if (currNode) {
-      __printDirectory(currNode);
+      __printDirectoryFile(currNode, output);
     } else {
       // If currNode was not found, then try if the last string is a valid
       // regex, if it is not valid, then it returns an error
@@ -101,13 +99,27 @@ bool ls::execute(FileTree &t, std::ofstream output) {
         }
       }
 
-      __printDirectory(currNode, pattern);
+      __printDirectoryFile(currNode, pattern, output);
     }
   }
 
   return true;
 }
 
+void ls::__printDirectoryFile(Node *curr, std::ofstream &output) {
+  for (auto &child : curr->children) {
+    output << child->content.name() << std::endl;
+  }
+}
+
+void ls::__printDirectoryFile(Node *curr, std::regex pattern,
+                              std::ofstream &output) {
+  for (auto &child : curr->children) {
+    if (std::regex_match(child->content.name(), pattern)) {
+      output << child->content.name() << std::endl;
+    }
+  }
+}
 void ls::__printDirectory(Node *curr) {
   for (auto &child : curr->children) {
     std::cout << child->content.name() << (child->content.isFolder() ? "/" : "")

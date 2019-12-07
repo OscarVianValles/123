@@ -24,7 +24,7 @@ bool rm::execute(FileTree &t) {
   return true;
 }
 
-bool rm::execute(FileTree &t, std::ofstream output) {
+bool rm::execute(FileTree &t, std::ofstream &output) {
   // Handle trivial test cases
   if (params.empty()) {
     output << "rm: missing file operand" << std::endl;

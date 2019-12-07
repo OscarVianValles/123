@@ -26,11 +26,9 @@ bool mv::execute(FileTree &t) {
 
   // Get current file
   Node *currentFile;
-  // If last token is "", then that means that the last character was a '/'
-  // which indicates that we are moving a folder
-  if (sourceTokens.back() == "" || params.front().back() == '/') {
-    currentFile = t.search(sourceTokens, false);
-  } else {
+  // try searching for folder
+  currentFile = t.search(sourceTokens, false);
+  if (!currentFile) {
     currentFile = t.search(sourceTokens, true);
   }
 
@@ -81,7 +79,7 @@ bool mv::execute(FileTree &t) {
   return true;
 }
 
-bool mv::execute(FileTree &t, std::ofstream output) {
+bool mv::execute(FileTree &t, std::ofstream &output) {
   // Handle trivial test cases
   if (params.empty()) {
     output << "mv: missing file operand" << std::endl;
@@ -103,11 +101,9 @@ bool mv::execute(FileTree &t, std::ofstream output) {
 
   // Get current file
   Node *currentFile;
-  // If last token is "", then that means that the last character was a '/'
-  // which indicates that we are moving a folder
-  if (sourceTokens.back() == "" || params.front().back() == '/') {
-    currentFile = t.search(sourceTokens, false);
-  } else {
+  // try searching for folder
+  currentFile = t.search(sourceTokens, false);
+  if (!currentFile) {
     currentFile = t.search(sourceTokens, true);
   }
 

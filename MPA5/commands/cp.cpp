@@ -7,7 +7,9 @@ cp::~cp() {}
 bool cp::execute(FileTree &t) {
   // Handle trivial test cases
   if (params.empty()) {
-    std::cout << "cp: missing file operand" << std::endl;
+    std::cout
+        << "usage: cp source_file/source_directory target_file/target_directory"
+        << std::endl;
     return false;
   } else if (params.size() == 1) {
     std::cout << "cp: missing destination file operand after '" +
@@ -26,11 +28,9 @@ bool cp::execute(FileTree &t) {
 
   // Get current file
   Node *currentFile;
-  // If last token is "", then that means that the last character was a '/'
-  // which indicates that we are copying a folder
-  if (sourceTokens.back() == "" || params.front().back() == '/') {
-    currentFile = t.search(sourceTokens, false);
-  } else {
+  // try searching for folder
+  currentFile = t.search(sourceTokens, false);
+  if (!currentFile) {
     currentFile = t.search(sourceTokens, true);
   }
 
@@ -84,19 +84,21 @@ bool cp::execute(FileTree &t) {
   }
 }
 
-bool cp::execute(FileTree &t, std::ofstream output) {
+bool cp::execute(FileTree &t, std::ofstream &output) {
   // Handle trivial test cases
   if (params.empty()) {
-    std::cout << "cp: missing file operand" << std::endl;
+    output
+        << "usage: cp source_file/source_directory target_file/target_directory"
+        << std::endl;
     return false;
   } else if (params.size() == 1) {
-    std::cout << "cp: missing destination file operand after '" +
-                     params.front() + "'"
-              << std::endl;
+    output << "cp: missing destination file operand after '" + params.front() +
+                  "'"
+           << std::endl;
 
     return false;
   } else if (params.size() > 2) {
-    std::cout << "cp: expected 2 arguments, got " << params.size() << std::endl;
+    output << "cp: expected 2 arguments, got " << params.size() << std::endl;
     return false;
   }
 
@@ -106,19 +108,17 @@ bool cp::execute(FileTree &t, std::ofstream output) {
 
   // Get current file
   Node *currentFile;
-  // If last token is "", then that means that the last character was a '/'
-  // which indicates that we are copying a folder
-  if (sourceTokens.back() == "" || params.front().back() == '/') {
-    currentFile = t.search(sourceTokens, false);
-  } else {
+  // try searching for folder
+  currentFile = t.search(sourceTokens, false);
+  if (!currentFile) {
     currentFile = t.search(sourceTokens, true);
   }
 
   // Handle if file is not found
   if (!currentFile) {
-    std::cout << "cp: cannot stat '" + sourceTokens.back() +
-                     "': No such file or directory"
-              << std::endl;
+    output << "cp: cannot stat '" + sourceTokens.back() +
+                  "': No such file or directory"
+           << std::endl;
     return false;
   }
 
@@ -128,8 +128,8 @@ bool cp::execute(FileTree &t, std::ofstream output) {
     if (currentFile->content.isFolder()) {
       distTokens.pop_back();
     } else {
-      std::cout << "cp: expected new name for file, got directory instead"
-                << std::endl;
+      output << "cp: expected new name for file, got directory instead"
+             << std::endl;
       return false;
     }
   }
@@ -153,9 +153,9 @@ bool cp::execute(FileTree &t, std::ofstream output) {
       t.insert(fileLocation, newNode);
       return true;
     } else {
-      std::cout << "cp: cannot create regular file '" + params.back() +
-                       "': No such file or directory"
-                << std::endl;
+      output << "cp: cannot create regular file '" + params.back() +
+                    "': No such file or directory"
+             << std::endl;
       return false;
     }
   } else {

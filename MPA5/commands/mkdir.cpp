@@ -7,12 +7,17 @@ mkdir::~mkdir() {}
 bool mkdir::execute(FileTree &t) {
   // Trivial test cases first
   if (params.empty()) {
-    std::cout << "mkdir: directory name cannot be blank" << std::endl;
+    std::cout << "usage: mkdir <directory name>" << std::endl;
     return false;
   }
 
   // Tokenize list
   std::list<std::string> tokens = tokenize(params.front(), '/');
+
+  if (t.search(tokens, false)) {
+    std::cout << "mkdir: " + params.front() + ": Already exists" << std::endl;
+    return false;
+  }
 
   // Get current node
   Node *curr = t.current();
@@ -43,16 +48,20 @@ bool mkdir::execute(FileTree &t) {
   return true;
 }
 
-bool mkdir::execute(FileTree &t, std::ofstream output) {
+bool mkdir::execute(FileTree &t, std::ofstream &output) {
   // Trivial test cases first
   if (params.empty()) {
-    output << "mkdir: directory name cannot be blank" << std::endl;
+    output << "usage: mkdir <directory name>" << std::endl;
     return false;
   }
 
   // Tokenize list
   std::list<std::string> tokens = tokenize(params.front(), '/');
 
+  if (t.search(tokens, false)) {
+    output << "mkdir: " + params.front() + ": Already exists" << std::endl;
+    return false;
+  }
   // Get current node
   Node *curr = t.current();
 

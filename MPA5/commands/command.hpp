@@ -14,7 +14,7 @@ protected:
 public:
   virtual ~Command(){};
   virtual bool execute(FileTree &) = 0;
-  virtual bool execute(FileTree &, std::ofstream) = 0;
+  virtual bool execute(FileTree &, std::ofstream &) = 0;
 };
 
 #endif

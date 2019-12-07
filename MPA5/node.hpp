@@ -2,6 +2,7 @@
 #define MPA5_NODE
 
 #include "fileDescriptor.hpp"
+#include <algorithm>
 #include <list>
 class Node {
 public:

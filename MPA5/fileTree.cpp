@@ -41,6 +41,7 @@ Node *FileTree::search(std::list<std::string> tokens, bool isFile) {
 // Recursive Search
 Node *FileTree::__search(Node *current, std::string searchItem,
                          std::list<std::string> tokens, bool isFile) {
+
   if (current->content.name() == searchItem) {
     // If tokens is empty, then that means that the last folder has been
     // reached. If not, then search the next child
@@ -54,10 +55,24 @@ Node *FileTree::__search(Node *current, std::string searchItem,
       // Get new search item
       std::string newSearchItem = tokens.front();
       tokens.pop_front();
+      Node *nextNode = current;
+
+      while (newSearchItem == "..") {
+        nextNode = nextNode->parent;
+        if (!nextNode) {
+          return nullptr;
+        }
+        if (tokens.size() >= 1) {
+          newSearchItem = tokens.front();
+          tokens.pop_front();
+        } else {
+          return nextNode;
+        }
+      }
 
       Node *returnValue;
       // Searching for new search item in each children
-      for (auto &child : current->children) {
+      for (auto &child : nextNode->children) {
         returnValue = __search(child, newSearchItem, tokens, isFile);
         if (returnValue != nullptr) {
           return returnValue;

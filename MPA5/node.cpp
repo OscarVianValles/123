@@ -1,5 +1,9 @@
 #include "node.hpp"
 
+bool nodeCompare(Node *first, Node *second) {
+  return first->content.name() < second->content.name();
+}
+
 // Constructors
 Node::Node(bool isFile, std::string fileName) : content(isFile, fileName) {
   parent = nullptr;
@@ -40,6 +44,8 @@ bool Node::addChild(Node *x) {
     } else {
       children.push_front(x);
     }
+
+    children.sort(nodeCompare);
     return true;
   }
 }

@@ -38,7 +38,7 @@ bool touch::execute(FileTree &t) {
   return true;
 }
 
-bool touch::execute(FileTree &t, std::ofstream output) {
+bool touch::execute(FileTree &t, std::ofstream &output) {
   // Handle trivial test cases
   if (params.empty()) {
     output << "touch: missing file operand" << std::endl;

@@ -11,7 +11,7 @@ public:
   cp(std::list<std::string>);
   ~cp();
   bool execute(FileTree &);
-  bool execute(FileTree &, std::ofstream);
+  bool execute(FileTree &, std::ofstream &);
 };
 
 #endif
