@@ -7,6 +7,7 @@
 #include "commands/cp.hpp"
 #include "commands/ls.hpp"
 #include "commands/mkdir.hpp"
+#include "commands/mv.hpp"
 #include "commands/rm.hpp"
 #include "commands/rmdir.hpp"
 #include "commands/rn.hpp"

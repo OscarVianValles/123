@@ -28,11 +28,18 @@ bool cp::execute(FileTree &t) {
   Node *currentFile;
   // If last token is "", then that means that the last character was a '/'
   // which indicates that we are copying a folder
-  if (sourceTokens.back() == "") {
-    sourceTokens.pop_back();
-    currentFile = t.search(sourceTokens, true);
-  } else {
+  if (sourceTokens.back() == "" || params.front().back() == '/') {
     currentFile = t.search(sourceTokens, false);
+  } else {
+    currentFile = t.search(sourceTokens, true);
+  }
+
+  // Handle if file is not found
+  if (!currentFile) {
+    std::cout << "cp: cannot stat '" + sourceTokens.back() +
+                     "': No such file or directory"
+              << std::endl;
+    return false;
   }
 
   // Handle if "cp foo/ bar/baz/", i.e. if the last location has an extra /, if
@@ -60,7 +67,7 @@ bool cp::execute(FileTree &t) {
   // argument. The directory is searched for, then the node is inserted there,
   // else insert it at the current node
   if (distTokens.size() >= 1) {
-    Node *fileLocation = t.search(distTokens, true);
+    Node *fileLocation = t.search(distTokens, false);
 
     if (fileLocation) {
       t.insert(fileLocation, newNode);

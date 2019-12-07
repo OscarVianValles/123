@@ -46,7 +46,8 @@ bool Node::addChild(Node *x) {
 
 // Deletes the node from the list, then properly deallocates the node
 bool Node::removeChild(Node *x) {
-  // Prevents running the function if the node is a file
+  // Prevents running the function if the current node is a file since a file
+  // should have no children
   if (content.isFile()) {
     return false;
   } else {
@@ -56,6 +57,28 @@ bool Node::removeChild(Node *x) {
       if (*(i) == x) {
         i = children.erase(i);
         delete x;
+        return true;
+      } else {
+        ++i;
+      }
+    }
+  }
+
+  return false;
+}
+
+// Deletes the node from the list BUT DOES NOT DEALLOCATES IT
+bool Node::dangerousRemoveChild(Node *x) {
+  // Prevents running the function if the current node is a file since a file
+  // should have no children
+  if (content.isFile()) {
+    return false;
+  } else {
+    auto i = children.begin();
+    auto end = children.end();
+    while (i != end) {
+      if (*(i) == x) {
+        i = children.erase(i);
         return true;
       } else {
         ++i;

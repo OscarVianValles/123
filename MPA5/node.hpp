@@ -17,6 +17,6 @@ public:
 
   bool addChild(Node *);
   bool removeChild(Node *);
+  bool dangerousRemoveChild(Node *);
 };
-
 #endif
